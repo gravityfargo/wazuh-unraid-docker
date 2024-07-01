@@ -24,7 +24,6 @@ COPY config/wazuh-indexer/internal_users.yml /config/
 COPY config/wazuh-indexer/indexer.yml /config/
 COPY config/wazuh-manager/wazuh_manager.conf /config/
 COPY config/certs.yml /config/
-COPY config/vm.max_map_count.sh /config/
 
 RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml && \
     sed -i "s,ip: wazuh.indexer,ip: ${INDEXER_HOSTNAME},1" /config/certs.yml && \

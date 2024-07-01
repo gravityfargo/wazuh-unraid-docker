@@ -11,7 +11,6 @@ cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
 cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
 cp /config/indexer.yml /wazuh-indexer/indexer.yml
 cp /config/wazuh_manager.conf /wazuh-manager/wazuh_manager.conf
-cp /config/vm.max_map_count.sh /wazuh-manager/vm.max_map_count.sh
 
 chown 1000:1000 /wazuh-dashboard -R
 chown 1000:1000 /wazuh-indexer -R
