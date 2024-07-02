@@ -8,6 +8,7 @@ echo "Copying configuration files"
 rm -rf /wazuh-indexer/certs
 mkdir -p /wazuh-indexer/certs
 mkdir -p /wazuh-manager/filebeat-etc
+
 cp /config/certs.yml /config.yml
 cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
 cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
@@ -16,10 +17,6 @@ cp /config/indexer.yml /wazuh-indexer/indexer.yml
 cp /config/wazuh_manager.conf /wazuh-manager/wazuh_manager.conf
 
 cp /config/filebeat.yml /wazuh-manager/filebeat-etc/filebeat.yml
-
-chown 1000:1000 /wazuh-dashboard -R
-chown 1000:1000 /wazuh-indexer -R
-chmod -R 500 /wazuh-indexer/certs
 
 ##############################################################################
 # Downloading Cert Gen Tool
@@ -61,9 +58,17 @@ source /$CERT_TOOL -A
 nodes_server=$(cert_parseYaml /config.yml | grep -E "nodes[_]+server[_]+[0-9]+=" | sed -e 's/nodes__server__[0-9]=//' | sed 's/"//g')
 node_names=($nodes_server)
 
+ls -la /wazuh-indexer/certs
 echo "Moving created certificates to the destination directory"
 cp /wazuh-certificates/* /wazuh-indexer/certs/
-chmod -R 400 /wazuh-indexer/certs/*
-chown 1000:1000 /wazuh-indexer/certs/*
 cp /wazuh-indexer/certs/root-ca.pem /wazuh-indexer/certs/root-ca-manager.pem
 cp /wazuh-indexer/certs/root-ca.key /wazuh-indexer/certs/root-ca-manager.key
+
+chmod -R 500 /wazuh-indexer/certs
+chmod -R 400 /wazuh-indexer/certs/*
+
+chown 1000:1000 -R /wazuh-dashboard
+chown 1000:1000 -R /wazuh-indexer
+chown 1000:1000 -R /wazuh-manager
+echo "Certificates created successfully"
+echo "Completed"
