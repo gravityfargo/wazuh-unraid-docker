@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 # Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 set -e
+echo "Copying configuration files"
+ls -l /usr/share/wazuh-indexer/certs/
+rm -rf /usr/share/wazuh-indexer/certs/*
+rm /usr/share/wazuh-indexer/opensearch.yml
+rm /usr/share/wazuh-indexer/opensearch-security/internal_users.yml
+echo "Making symbolic links"
+ls -l /usr/share/wazuh-indexer/certs/
+
+ln -s /wazuh-indexer/certs/root-ca.pem /usr/share/wazuh-indexer/certs/root-ca.pem
+ln -s /wazuh-indexer/certs/indexer-key.pem /usr/share/wazuh-indexer/certs/indexer.key
+ln -s /wazuh-indexer/certs/indexer.pem /usr/share/wazuh-indexer/certs/wazuh.indexer.pem
+ln -s /wazuh-indexer/certs/admin.pem /usr/share/wazuh-indexer/certs/admin.pem
+ln -s /wazuh-indexer/certs/admin-key.pem /usr/share/wazuh-indexer/certs/admin-key.pem
+ln -s /wazuh-indexer/indexer.yml /usr/share/wazuh-indexer/opensearch.yml
+ln -s /wazuh-indexer/internal_users.yml /usr/share/wazuh-indexer/opensearch-security/internal_users.yml
+
+mkdir -p /var/lib/wazuh-indexer
+ln -s /wazuh-indexer/data /var/lib/wazuh-indexer
+echo "Symbolic links created"
+ls -l /usr/share/wazuh-indexer/certs/
 
 umask 0002
 
@@ -274,43 +294,42 @@ opensearch_vars=(
 )
 
 run_as_other_user_if_needed() {
-  if [[ "$(id -u)" == "0" ]]; then
-    # If running as root, drop to specified UID and run command
-    exec chroot --userspec=1000:0 / "${@}"
-  else
-    # Either we are running in Openshift with random uid and are a member of the root group
-    # or with a custom --user
-    exec "${@}"
-  fi
+    if [[ "$(id -u)" == "0" ]]; then
+        # If running as root, drop to specified UID and run command
+        exec chroot --userspec=1000:0 / "${@}"
+    else
+        # Either we are running in Openshift with random uid and are a member of the root group
+        # or with a custom --user
+        exec "${@}"
+    fi
 }
 
 function buildOpensearchConfig {
-    echo "" >> $OPENSEARCH_PATH_CONF/opensearch.yml
-      for opensearch_var in ${opensearch_vars[*]}; do
+    echo "" >>$OPENSEARCH_PATH_CONF/opensearch.yml
+    for opensearch_var in ${opensearch_vars[*]}; do
         env_var=$(echo ${opensearch_var^^} | tr . _)
         value=${!env_var}
         if [[ -n $value ]]; then
-          if grep -q $opensearch_var $OPENSEARCH_PATH_CONF/opensearch.yml; then
-            lineNum="$(grep -n "$opensearch_var" $OPENSEARCH_PATH_CONF/opensearch.yml | head -n 1 | cut -d: -f1)"
-            sed -i "${lineNum}d" $OPENSEARCH_PATH_CONF/opensearch.yml
-            charline=$(awk "NR == ${lineNum}" $OPENSEARCH_PATH_CONF/opensearch.yml | head -c 1)
-          fi
-          while :
-          do
-            case "$charline" in
-              "-"| "#" |" ") sed -i "${lineNum}d" $OPENSEARCH_PATH_CONF/opensearch.yml;;
-              *) break;;
-            esac
-            charline=$(awk "NR == ${lineNum}" $OPENSEARCH_PATH_CONF/opensearch.yml | head -c 1)
-          done
-          longoptfile="${opensearch_var}: ${value}"
-          if grep -q $opensearch_var $OPENSEARCH_PATH_CONF/opensearch.yml; then
-            sed -i "/${opensearch_var}/ s|^.*$|${longoptfile}|" $OPENSEARCH_PATH_CONF/opensearch.yml
-          else
-            echo $longoptfile >> $OPENSEARCH_PATH_CONF/opensearch.yml
-          fi
+            if grep -q $opensearch_var $OPENSEARCH_PATH_CONF/opensearch.yml; then
+                lineNum="$(grep -n "$opensearch_var" $OPENSEARCH_PATH_CONF/opensearch.yml | head -n 1 | cut -d: -f1)"
+                sed -i "${lineNum}d" $OPENSEARCH_PATH_CONF/opensearch.yml
+                charline=$(awk "NR == ${lineNum}" $OPENSEARCH_PATH_CONF/opensearch.yml | head -c 1)
+            fi
+            while :; do
+                case "$charline" in
+                "-" | "#" | " ") sed -i "${lineNum}d" $OPENSEARCH_PATH_CONF/opensearch.yml ;;
+                *) break ;;
+                esac
+                charline=$(awk "NR == ${lineNum}" $OPENSEARCH_PATH_CONF/opensearch.yml | head -c 1)
+            done
+            longoptfile="${opensearch_var}: ${value}"
+            if grep -q $opensearch_var $OPENSEARCH_PATH_CONF/opensearch.yml; then
+                sed -i "/${opensearch_var}/ s|^.*$|${longoptfile}|" $OPENSEARCH_PATH_CONF/opensearch.yml
+            else
+                echo $longoptfile >>$OPENSEARCH_PATH_CONF/opensearch.yml
+            fi
         fi
-      done
+    done
 }
 
 buildOpensearchConfig
@@ -319,17 +338,17 @@ buildOpensearchConfig
 # for example to directly specify `-E` style parameters for opensearch on k8s
 # or simply to run /bin/bash to check the image
 if [[ "$1" != "opensearchwrapper" ]]; then
-  if [[ "$(id -u)" == "0" && $(basename "$1") == "opensearch" ]]; then
-    # Rewrite CMD args to replace $1 with `opensearch` explicitly,
-    # Without this, user could specify `opensearch -E x.y=z` but
-    # `bin/opensearch -E x.y=z` would not work.
-    set -- "opensearch" "${@:2}"
-    # Use chroot to switch to UID 1000 / GID 0
-    exec chroot --userspec=1000:0 / "$@"
-  else
-    # User probably wants to run something else, like /bin/bash, with another uid forced (Openshift?)
-    exec "$@"
-  fi
+    if [[ "$(id -u)" == "0" && $(basename "$1") == "opensearch" ]]; then
+        # Rewrite CMD args to replace $1 with `opensearch` explicitly,
+        # Without this, user could specify `opensearch -E x.y=z` but
+        # `bin/opensearch -E x.y=z` would not work.
+        set -- "opensearch" "${@:2}"
+        # Use chroot to switch to UID 1000 / GID 0
+        exec chroot --userspec=1000:0 / "$@"
+    else
+        # User probably wants to run something else, like /bin/bash, with another uid forced (Openshift?)
+        exec "$@"
+    fi
 fi
 
 # Allow environment variables to be set by creating a file with the
@@ -343,36 +362,35 @@ fi
 source /usr/share/wazuh-indexer/bin/opensearch-env-from-file
 
 if [[ -f bin/opensearch-users ]]; then
-  # Check for the INDEXER_PASSWORD environment variable to set the
-  # bootstrap password for Security.
-  #
-  # This is only required for the first node in a cluster with Security
-  # enabled, but we have no way of knowing which node we are yet. We'll just
-  # honor the variable if it's present.
-  if [[ -n "$INDEXER_PASSWORD" ]]; then
-    [[ -f /usr/share/wazuh-indexer/opensearch.keystore ]] || (run_as_other_user_if_needed opensearch-keystore create)
-    if ! (run_as_other_user_if_needed opensearch-keystore has-passwd --silent) ; then
-      # keystore is unencrypted
-      if ! (run_as_other_user_if_needed opensearch-keystore list | grep -q '^bootstrap.password$'); then
-        (run_as_other_user_if_needed echo "$INDEXER_PASSWORD" | opensearch-keystore add -x 'bootstrap.password')
-      fi
-    else
-      # keystore requires password
-      if ! (run_as_other_user_if_needed echo "$KEYSTORE_PASSWORD" \
-          | opensearch-keystore list | grep -q '^bootstrap.password$') ; then
-        COMMANDS="$(printf "%s\n%s" "$KEYSTORE_PASSWORD" "$INDEXER_PASSWORD")"
-        (run_as_other_user_if_needed echo "$COMMANDS" | opensearch-keystore add -x 'bootstrap.password')
-      fi
+    # Check for the INDEXER_PASSWORD environment variable to set the
+    # bootstrap password for Security.
+    #
+    # This is only required for the first node in a cluster with Security
+    # enabled, but we have no way of knowing which node we are yet. We'll just
+    # honor the variable if it's present.
+    if [[ -n "$INDEXER_PASSWORD" ]]; then
+        [[ -f /usr/share/wazuh-indexer/opensearch.keystore ]] || (run_as_other_user_if_needed opensearch-keystore create)
+        if ! (run_as_other_user_if_needed opensearch-keystore has-passwd --silent); then
+            # keystore is unencrypted
+            if ! (run_as_other_user_if_needed opensearch-keystore list | grep -q '^bootstrap.password$'); then
+                (run_as_other_user_if_needed echo "$INDEXER_PASSWORD" | opensearch-keystore add -x 'bootstrap.password')
+            fi
+        else
+            # keystore requires password
+            if ! (run_as_other_user_if_needed echo "$KEYSTORE_PASSWORD" |
+                opensearch-keystore list | grep -q '^bootstrap.password$'); then
+                COMMANDS="$(printf "%s\n%s" "$KEYSTORE_PASSWORD" "$INDEXER_PASSWORD")"
+                (run_as_other_user_if_needed echo "$COMMANDS" | opensearch-keystore add -x 'bootstrap.password')
+            fi
+        fi
     fi
-  fi
 fi
 
 if [[ "$(id -u)" == "0" ]]; then
-  # If requested and running as root, mutate the ownership of bind-mounts
-  if [[ -n "$TAKE_FILE_OWNERSHIP" ]]; then
-    chown -R 1000:0 /usr/share/wazuh-indexer/{data,logs}
-  fi
+    # If requested and running as root, mutate the ownership of bind-mounts
+    if [[ -n "$TAKE_FILE_OWNERSHIP" ]]; then
+        chown -R 1000:0 /usr/share/wazuh-indexer/{data,logs}
+    fi
 fi
-
 
 run_as_other_user_if_needed /usr/share/wazuh-indexer/bin/opensearch <<<"$KEYSTORE_PASSWORD"
