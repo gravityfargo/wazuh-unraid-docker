@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>WazuhUnraidSetup</Name>
-  <Repository>gravityfargo/wazuh-unraid-setup</Repository>
-  <Registry>https://registry.hub.docker.com/r/gravityfargo/wazuh-unraid-setup</Registry>
-  <Network>bridge</Network>
+  <Name>Wazuh-Unraid-Setup</Name>
+  <Repository>gravityfargo/wazuh-unraid-setup:4.8.0</Repository>
+  <Registry>https://hub.docker.com/r/gravityfargo/wazuh-unraid-setup</Registry>
+  <Network>none</Network>
   <MyIP/>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
   <Support/>
   <Project></Project>
-  <Overview>The Wazuh dashboard is a flexible and intuitive web user interface for mining, analyzing, and visualizing security events and alerts data. It is also used for the management and monitoring of the Wazuh platform. Additionally, it provides features for role-based access control (RBAC) and single sign-on (SSO).</Overview>
+  <Overview>This container prepares the configuration, directories, and certificates for the Wazuh stack.</Overview>
   <ReadMe>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/wazuh-readme.md</ReadMe>
   <Category>Security:</Category>
   <WebUI>https://wazuh-dashboard.local:[PORT:5601]</WebUI>
