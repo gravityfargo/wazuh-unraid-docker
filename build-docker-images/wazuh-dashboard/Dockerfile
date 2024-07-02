@@ -26,8 +26,6 @@ RUN chmod 775 /install_wazuh_app.sh
 RUN bash /install_wazuh_app.sh
 
 # Copy and set permissions to config files
-RUN cp  $INSTALL_DIR/etc/opensearch_dashboards.yml $INSTALL_DIR/config/opensearch_dashboards.yml
-COPY config/wazuh.yml $INSTALL_DIR/data/wazuh/config/
 RUN chmod 664 $INSTALL_DIR/config/opensearch_dashboards.yml
 
 # Create and set permissions to data directories
@@ -50,36 +48,6 @@ ENV USER="wazuh-dashboard" \
     GROUP="wazuh-dashboard" \
     NAME="wazuh-dashboard" \
     INSTALL_DIR="/usr/share/wazuh-dashboard"
-
-# Set Wazuh app variables
-ENV PATTERN="" \
-    CHECKS_PATTERN="" \
-    CHECKS_TEMPLATE="" \
-    CHECKS_API="" \
-    CHECKS_SETUP="" \
-    EXTENSIONS_PCI="" \
-    EXTENSIONS_GDPR="" \
-    EXTENSIONS_HIPAA="" \
-    EXTENSIONS_NIST="" \
-    EXTENSIONS_TSC="" \
-    EXTENSIONS_AUDIT="" \
-    EXTENSIONS_OSCAP="" \
-    EXTENSIONS_CISCAT="" \
-    EXTENSIONS_AWS="" \
-    EXTENSIONS_GCP="" \
-    EXTENSIONS_GITHUB=""\
-    EXTENSIONS_OFFICE=""\
-    EXTENSIONS_VIRUSTOTAL="" \
-    EXTENSIONS_OSQUERY="" \
-    EXTENSIONS_DOCKER="" \
-    APP_TIMEOUT="" \
-    API_SELECTOR="" \
-    IP_SELECTOR="" \
-    IP_IGNORE="" \
-    WAZUH_MONITORING_ENABLED="" \
-    WAZUH_MONITORING_FREQUENCY="" \
-    WAZUH_MONITORING_SHARDS="" \
-    WAZUH_MONITORING_REPLICAS=""
 
 # Update and install dependencies
 RUN yum install shadow-utils -y
