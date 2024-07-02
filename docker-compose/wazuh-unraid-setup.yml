@@ -5,16 +5,21 @@ services:
         hostname: wazuh-unraid-setup
         container_name: wazuh-unraid-setup
         environment:
-            - MANAGER_NAME=wazuh-manager
-            - MANAGER_HOSTNAME=wazuh-manager.local
-            - MANAGER_IP=10.10.10.101
-            - INDEXER_NAME=wazuh-indexer
-            - INDEXER_HOSTNAME=wazuh-indexer.local
-            - DASHBOARD_NAME=wazuh-dashboard
-            - DASHBOARD_HOSTNAME=wazuh-dashboard.local
-            - UNRAID_USER=root
-            - UNRAID_HOSTNAME=unraid.local
+          - WAZUH_MANAGER_PATH=/mnt/user/appdata/wazuh-manager
+          - WAZUH_INDEXER_PATH=/mnt/user/appdata/wazuh-indexer
+          - WAZUH_DASHBOARD_PATH=/mnt/user/appdata/wazuh-manager
+          - MANAGER_NAME=wazuh-manager
+          - MANAGER_HOSTNAME=wazuh-manager.local
+          - MANAGER_IP=10.10.10.101
+          - INDEXER_NAME=wazuh-indexer
+          - INDEXER_HOSTNAME=wazuh-indexer.local
+          - INDEXER_IP=10.10.10.100
+          - DASHBOARD_NAME=wazuh-dashboard
+          - DASHBOARD_HOSTNAME=wazuh-dashboard.local
+          - UNRAID_USER=root
+          - UNRAID_HOSTNAME=unraid.local
+          - FILEBEAT_SSL_VERIFICATION_MODE=full
         volumes:
-            - /mnt/user/appdata/wazuh-manager:/wazuh-manager
-            - /mnt/user/appdata/wazuh-indexer:/wazuh-indexer
-            - /mnt/user/appdata/wazuh-dashboard:/wazuh-dashboard
+            - ${WAZUH_MANAGER_PATH}:/wazuh-manager
+            - ${WAZUH_INDEXER_PATH}:/wazuh-indexer
+            - ${WAZUH_DASHBOARD_PATH}:/wazuh-dashboard
