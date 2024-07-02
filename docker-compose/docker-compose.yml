@@ -17,31 +17,29 @@ services:
       - "514:514/udp"
       - "55000:55000"
     environment:
-      - INDEXER_URL=https://wazuh-indexer.local:9200
+      - WAZUH_MANAGER_PATH=/mnt/user/appdata/wazuh-manager
+      - WAZUH_INDEXER_PATH=/mnt/user/appdata/wazuh-indexer
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword
       - FILEBEAT_SSL_VERIFICATION_MODE=full
-      - SSL_CERTIFICATE_AUTHORITIES=/etc/ssl/root-ca.pem
-      - SSL_CERTIFICATE=/etc/ssl/filebeat.pem
-      - SSL_KEY=/etc/ssl/filebeat.key
-      - API_USERNAME=wazuh-wuiINDEXER_URL
+      - API_USERNAME=wazuh-wui
       - API_PASSWORD=MyS3cr37P450r.*-
     volumes:
-      - /mnt/user/appdata/wazuh-indexer/certs/root-ca-manager.pem:/etc/ssl/root-ca.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/manager.pem:/etc/ssl/filebeat.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/manager-key.pem:/etc/ssl/filebeat.key
-      - /mnt/user/appdata/wazuh-manager/ossec-api-configuration:/var/ossec/api/configuration
-      - /mnt/user/appdata/wazuh-manager/ossec-etc:/var/ossec/etc
-      - /mnt/user/appdata/wazuh-manager/ossec-logs:/var/ossec/logs
-      - /mnt/user/appdata/wazuh-manager/ossec-queue:/var/ossec/queue
-      - /mnt/user/appdata/wazuh-manager/ossec-var-multigroups:/var/ossec/var/multigroups
-      - /mnt/user/appdata/wazuh-manager/ossec-integrations:/var/ossec/integrations
-      - /mnt/user/appdata/wazuh-manager/ossec-active-response:/var/ossec/active-response/bin
-      - /mnt/user/appdata/wazuh-manager/ossec-agentless:/var/ossec/agentless
-      - /mnt/user/appdata/wazuh-manager/ossec-wodles:/var/ossec/wodles
-      - /mnt/user/appdata/wazuh-manager/filebeat-etc:/etc/filebeat
-      - /mnt/user/appdata/wazuh-manager/filebeat-var:/var/lib/filebeat
-      - /mnt/user/appdata/wazuh-manager/wazuh_manager.conf:/wazuh-config-mount/etc/ossec.conf
+      - ${WAZUH_INDEXER_PATH}/certs/root-ca-manager.pem:/etc/ssl/root-ca.pem
+      - ${WAZUH_INDEXER_PATH}/certs/manager.pem:/etc/ssl/filebeat.pem
+      - ${WAZUH_INDEXER_PATH}/certs/manager-key.pem:/etc/ssl/filebeat.key
+      - ${WAZUH_MANAGER_PATH}/ossec-api-configuration:/var/ossec/api/configuration
+      - ${WAZUH_MANAGER_PATH}/ossec-etc:/var/ossec/etc
+      - ${WAZUH_MANAGER_PATH}/ossec-logs:/var/ossec/logs
+      - ${WAZUH_MANAGER_PATH}/ossec-queue:/var/ossec/queue
+      - ${WAZUH_MANAGER_PATH}/ossec-var-multigroups:/var/ossec/var/multigroups
+      - ${WAZUH_MANAGER_PATH}/ossec-integrations:/var/ossec/integrations
+      - ${WAZUH_MANAGER_PATH}/ossec-active-response:/var/ossec/active-response/bin
+      - ${WAZUH_MANAGER_PATH}/ossec-agentless:/var/ossec/agentless
+      - ${WAZUH_MANAGER_PATH}/ossec-wodles:/var/ossec/wodles
+      - ${WAZUH_MANAGER_PATH}/filebeat-etc:/etc/filebeat
+      - ${WAZUH_MANAGER_PATH}/filebeat-var:/var/lib/filebeat
+      - ${WAZUH_MANAGER_PATH}/wazuh_manager.conf:/wazuh-config-mount/etc/ossec.conf
 
   wazuh-indexer:
     image: wazuh/wazuh-indexer:4.8.0
@@ -50,6 +48,7 @@ services:
     ports:
       - "9200:9200"
     environment:
+      - WAZUH_INDEXER_PATH=/mnt/user/appdata/wazuh-indexer
       - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
@@ -59,14 +58,14 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - /mnt/user/appdata/wazuh-indexer/certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/indexer-key.pem:/usr/share/wazuh-indexer/certs/indexer.key
-      - /mnt/user/appdata/wazuh-indexer/certs/indexer.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem
-      - /mnt/user/appdata/wazuh-indexer/indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
-      - /mnt/user/appdata/wazuh-indexer/internal_users.yml:/usr/share/wazuh-indexer/opensearch-security/internal_users.yml
-      - /mnt/user/appdata/wazuh-indexer/data:/var/lib/wazuh-indexer
+      - ${WAZUH_MANAGER_PATH}/certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
+      - ${WAZUH_MANAGER_PATH}/certs/indexer-key.pem:/usr/share/wazuh-indexer/certs/indexer.key
+      - ${WAZUH_MANAGER_PATH}/certs/indexer.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer.pem
+      - ${WAZUH_MANAGER_PATH}/certs/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem
+      - ${WAZUH_MANAGER_PATH}/certs/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem
+      - ${WAZUH_MANAGER_PATH}/indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
+      - ${WAZUH_MANAGER_PATH}/internal_users.yml:/usr/share/wazuh-indexer/opensearch-security/internal_users.yml
+      - ${WAZUH_MANAGER_PATH}/data:/var/lib/wazuh-indexer
   wazuh-dashboard:
     image: wazuh/wazuh-dashboard:4.8.0
     hostname: wazuh-dashboard.local
@@ -74,6 +73,8 @@ services:
     ports:
       - 5601:5601
     environment:
+      - WAZUH_DASHBOARD_PATH=/mnt/user/appdata/wazuh-manager
+      - WAZUH_INDEXER_PATH=/mnt/user/appdata/wazuh-indexer
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword
       - WAZUH_API_URL=https://wazuh-manager.local
@@ -82,10 +83,10 @@ services:
       - API_USERNAME=wazuh-wui
       - API_PASSWORD=MyS3cr37P450r.*-
     volumes:
-      - /mnt/user/appdata/wazuh-indexer/certs/dashboard.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/dashboard-key.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem
-      - /mnt/user/appdata/wazuh-indexer/certs/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem
-      - /mnt/user/appdata/wazuh-dashboard/opensearch_dashboards.yml:/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
-      - /mnt/user/appdata/wazuh-dashboard/wazuh.yml:/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml
-      - /mnt/user/appdata/wazuh-dashboard/dashboard-config:/usr/share/wazuh-dashboard/data/wazuh/config
-      - /mnt/user/appdata/wazuh-dashboard/dashboard-custom:/usr/share/wazuh-dashboard/plugins/wazuh/public/assets/custom
+      - ${WAZUH_MANAGER_PATH}/certs/dashboard.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem
+      - ${WAZUH_MANAGER_PATH}/certs/dashboard-key.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem
+      - ${WAZUH_MANAGER_PATH}/certs/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem
+      - ${WAZUH_DASHBOARD_PATH}/opensearch_dashboards.yml:/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
+      - ${WAZUH_DASHBOARD_PATH}/wazuh.yml:/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml
+      - ${WAZUH_DASHBOARD_PATH}/dashboard-config:/usr/share/wazuh-dashboard/data/wazuh/config
+      - ${WAZUH_DASHBOARD_PATH}/dashboard-custom:/usr/share/wazuh-dashboard/plugins/wazuh/public/assets/custom
