@@ -4,9 +4,10 @@
 ##############################################################################
 # Copy configuration files
 ##############################################################################
-set -e
-
 echo "Copying configuration files"
+rm -rf /wazuh-indexer/certs
+mkdir -p /wazuh-indexer/certs
+mkdir -p /wazuh-manager/filebeat-etc
 cp /config/certs.yml /config.yml
 cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
 cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
@@ -18,8 +19,6 @@ cp /config/filebeat.yml /wazuh-manager/filebeat-etc/filebeat.yml
 
 chown 1000:1000 /wazuh-dashboard -R
 chown 1000:1000 /wazuh-indexer -R
-rm -rf /wazuh-indexer/certs
-mkdir /wazuh-indexer/certs
 chmod -R 500 /wazuh-indexer/certs
 
 ##############################################################################
