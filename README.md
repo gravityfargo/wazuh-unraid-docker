@@ -41,7 +41,7 @@ docker build -t gravityfargo/wazuh-unraid-setup:0.0.1 build-docker-images/wazuh-
 To run the wazuh-unraid-setup::
 
 ```bash
-docker-compose -f single-node/wazuh-unraid-setup.yml run --rm generator
+docker-compose -f docker-compose/wazuh-unraid-setup.yml run --rm generator
 ```
 
 ## Credits
