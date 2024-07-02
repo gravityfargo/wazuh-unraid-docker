@@ -41,14 +41,13 @@ services:
             - ${WAZUH_MANAGER_PATH}/filebeat-var:/var/lib/filebeat
             - ${WAZUH_MANAGER_PATH}/wazuh_manager.conf:/wazuh-config-mount/etc/ossec.conf
 
-    wazuh-indexer:
-        image: wazuh/wazuh-indexer:4.8.0
+    indexer:
+        image: gravityfargo/wazuh-indexer:4.8.0
         hostname: wazuh-indexer.local
         restart: always
         ports:
             - "9200:9200"
         environment:
-            - WAZUH_INDEXER_PATH=/mnt/user/appdata/wazuh-indexer
             - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
         ulimits:
             memlock:
@@ -58,14 +57,7 @@ services:
                 soft: 65536
                 hard: 65536
         volumes:
-            - ${WAZUH_MANAGER_PATH}/certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
-            - ${WAZUH_MANAGER_PATH}/certs/indexer-key.pem:/usr/share/wazuh-indexer/certs/indexer.key
-            - ${WAZUH_MANAGER_PATH}/certs/indexer.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer.pem
-            - ${WAZUH_MANAGER_PATH}/certs/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem
-            - ${WAZUH_MANAGER_PATH}/certs/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem
-            - ${WAZUH_MANAGER_PATH}/indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
-            - ${WAZUH_MANAGER_PATH}/internal_users.yml:/usr/share/wazuh-indexer/opensearch-security/internal_users.yml
-            - ${WAZUH_MANAGER_PATH}/data:/var/lib/wazuh-indexer
+            - /mnt/user/appdata/wazuh-indexer:/wazuh-indexer
 
     wazuh-dashboard:
         image: wazuh/wazuh-dashboard:4.8.0
