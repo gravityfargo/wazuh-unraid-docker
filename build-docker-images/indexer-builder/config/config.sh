@@ -33,17 +33,16 @@ MINOR_CURRENT=$(echo $WAZUH_CURRENT_VERSION | cut -d. -f3)
 
 ## check version to use the correct repository
 if [ "$MAJOR_BUILD" -gt "$MAJOR_CURRENT" ]; then
-  REPOSITORY="packages-dev.wazuh.com/pre-release"
-elif [ "$MAJOR_BUILD" -eq "$MAJOR_CURRENT" ]; then
-  if [ "$MID_BUILD" -gt "$MID_CURRENT" ]; then
     REPOSITORY="packages-dev.wazuh.com/pre-release"
-  elif [ "$MID_BUILD" -eq "$MID_CURRENT" ]; then
-    if [ "$MINOR_BUILD" -gt "$MINOR_CURRENT" ]; then
-      REPOSITORY="packages-dev.wazuh.com/pre-release"
+elif [ "$MAJOR_BUILD" -eq "$MAJOR_CURRENT" ]; then
+    if [ "$MID_BUILD" -gt "$MID_CURRENT" ]; then
+        REPOSITORY="packages-dev.wazuh.com/pre-release"
+    elif [ "$MID_BUILD" -eq "$MID_CURRENT" ]; then
+        if [ "$MINOR_BUILD" -gt "$MINOR_CURRENT" ]; then
+            REPOSITORY="packages-dev.wazuh.com/pre-release"
+        fi
     fi
-  fi
 fi
-
 
 curl -o ${INDEXER_FILE} https://${REPOSITORY}/stack/indexer/${BASE_FILE}
 tar -xf ${INDEXER_FILE}
@@ -53,40 +52,39 @@ tar -xf ${INDEXER_FILE}
 ## Variables
 CERT_TOOL=wazuh-certs-tool.sh
 PASSWORD_TOOL=wazuh-passwords-tool.sh
-PACKAGES_URL=https://packages.wazuh.com/5.0/
-PACKAGES_DEV_URL=https://packages-dev.wazuh.com/5.0/
+PACKAGES_URL=https://packages.wazuh.com/4.8/
+PACKAGES_DEV_URL=https://packages-dev.wazuh.com/4.8/
 
 ## Check if the cert tool exists in S3 buckets
-CERT_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$CERT_TOOL | grep -E "^HTTP" | awk  '{print $2}')
-CERT_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$CERT_TOOL | grep -E "^HTTP" | awk  '{print $2}')
+CERT_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
+CERT_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
 
 ## If cert tool exists in some bucket, download it, if not exit 1
 if [ "$CERT_TOOL_PACKAGES" = "200" ]; then
-  curl -o $CERT_TOOL $PACKAGES_URL$CERT_TOOL
-  echo "Cert tool exists in Packages bucket"
+    curl -o $CERT_TOOL $PACKAGES_URL$CERT_TOOL
+    echo "Cert tool exists in Packages bucket"
 elif [ "$CERT_TOOL_PACKAGES_DEV" = "200" ]; then
-  curl -o $CERT_TOOL $PACKAGES_DEV_URL$CERT_TOOL
-  echo "Cert tool exists in Packages-dev bucket"
+    curl -o $CERT_TOOL $PACKAGES_DEV_URL$CERT_TOOL
+    echo "Cert tool exists in Packages-dev bucket"
 else
-  echo "Cert tool does not exist in any bucket"
-  exit 1
+    echo "Cert tool does not exist in any bucket"
+    exit 1
 fi
 
-
 ## Check if the password tool exists in S3 buckets
-PASSWORD_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$PASSWORD_TOOL | grep -E "^HTTP" | awk  '{print $2}')
-PASSWORD_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$PASSWORD_TOOL | grep -E "^HTTP" | awk  '{print $2}')
+PASSWORD_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$PASSWORD_TOOL | grep -E "^HTTP" | awk '{print $2}')
+PASSWORD_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$PASSWORD_TOOL | grep -E "^HTTP" | awk '{print $2}')
 
 ## If password tool exists in some bucket, download it, if not exit 1
 if [ "$PASSWORD_TOOL_PACKAGES" = "200" ]; then
-  curl -o $PASSWORD_TOOL $PACKAGES_URL$PASSWORD_TOOL
-  echo "Password tool exists in Packages bucket"
+    curl -o $PASSWORD_TOOL $PACKAGES_URL$PASSWORD_TOOL
+    echo "Password tool exists in Packages bucket"
 elif [ "$PASSWORD_TOOL_PACKAGES_DEV" = "200" ]; then
-  curl -o $PASSWORD_TOOL $PACKAGES_DEV_URL$PASSWORD_TOOL
-  echo "Password tool exists in Packages-dev bucket"
+    curl -o $PASSWORD_TOOL $PACKAGES_DEV_URL$PASSWORD_TOOL
+    echo "Password tool exists in Packages-dev bucket"
 else
-  echo "Password tool does not exist in any bucket"
-  exit 1
+    echo "Password tool does not exist in any bucket"
+    exit 1
 fi
 
 chmod 755 $CERT_TOOL && bash /$CERT_TOOL -A
@@ -117,6 +115,12 @@ cp -pr ${BASE_DIR}/* ${TARGET_DIR}${INSTALLATION_DIR}
 # Copy the security tools
 cp /$CERT_TOOL ${TARGET_DIR}${INSTALLATION_DIR}/plugins/opensearch-security/tools/
 cp /$PASSWORD_TOOL ${TARGET_DIR}${INSTALLATION_DIR}/plugins/opensearch-security/tools/
+# Copy Wazuh's config files for the security plugin
+cp -pr /roles_mapping.yml ${TARGET_DIR}${INSTALLATION_DIR}/opensearch-security/
+cp -pr /roles.yml ${TARGET_DIR}${INSTALLATION_DIR}/opensearch-security/
+cp -pr /action_groups.yml ${TARGET_DIR}${INSTALLATION_DIR}/opensearch-security/
+cp -pr /internal_users.yml ${TARGET_DIR}${INSTALLATION_DIR}/opensearch-security/
+cp -pr /opensearch.yml ${TARGET_DIR}${CONFIG_DIR}
 # Copy Wazuh indexer's certificates
 cp -pr /wazuh-certificates/demo.indexer.pem ${TARGET_DIR}${CONFIG_DIR}/certs/indexer.pem
 cp -pr /wazuh-certificates/demo.indexer-key.pem ${TARGET_DIR}${CONFIG_DIR}/certs/indexer-key.pem
@@ -129,7 +133,6 @@ cp -pr /wazuh-certificates/admin-key.pem ${TARGET_DIR}${CONFIG_DIR}/certs/admin-
 sed '/-Xms/d' -i ${TARGET_DIR}${CONFIG_DIR}/jvm.options
 sed '/-Xmx/d' -i ${TARGET_DIR}${CONFIG_DIR}/jvm.options
 sed -i 's/-Djava.security.policy=file:\/\/\/etc\/wazuh-indexer\/opensearch-performance-analyzer\/opensearch_security.policy/-Djava.security.policy=file:\/\/\/usr\/share\/wazuh-indexer\/opensearch-performance-analyzer\/opensearch_security.policy/g' ${TARGET_DIR}${CONFIG_DIR}/jvm.options
-
 
 chmod -R 500 ${TARGET_DIR}${CONFIG_DIR}/certs
 chmod -R 400 ${TARGET_DIR}${CONFIG_DIR}/certs/*
