@@ -6,6 +6,7 @@
 ##############################################################################
 echo "Copying configuration files"
 rm -rf /wazuh-indexer/certs
+rm -rf /wazuh-certificates
 mkdir -p /wazuh-indexer/certs
 mkdir -p /wazuh-manager/filebeat-etc
 mkdir -p /wazuh-dashboard
