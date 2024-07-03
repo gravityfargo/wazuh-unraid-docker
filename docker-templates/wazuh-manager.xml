@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>WazuhManager</Name>
-  <Repository>wazuh/wazuh-manager:4.8.0</Repository>
-  <Registry>https://registry.hub.docker.com/r/wazuh/wazuh-manager</Registry>
+  <Name>Wazuh-Manager</Name>
+  <Repository>gravityfargo/wazuh-manager:4.8.0</Repository>
+  <Registry>https://registry.hub.docker.com/r/gravityfargo/wazuh-manager</Registry>
   <Network>br0</Network>
   <MyIP>10.10.10.101</MyIP>
   <Shell>bash</Shell>
@@ -10,12 +10,12 @@
   <Support/>
   <Project>https://wazuh.com/</Project>
   <Overview>The Wazuh manager is the system that analyzes the data received from all registered agents and triggers alerts when an event coincides with a rule.</Overview>
-  <ReadMe>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/wazuh-readme.md</ReadMe>
+  <ReadMe>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/README.md</ReadMe>
   <Category>Security:</Category>
   <WebUI></WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/icons/wazuhmanager.png</Icon>
-  <ExtraParams>--hostname=wazuh-manager.local --ulimit memlock=-1:-1 --ulimit nofile=65536:65536</ExtraParams>
+  <Icon>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/icons/wazuhmanager.png</Icon>
+  <ExtraParams>--ulimit memlock=-1:-1 --ulimit nofile=65536:65536</ExtraParams>
   <PostArgs/>
   <CPUset/>
   <DateInstalled>1719703986</DateInstalled>
@@ -27,19 +27,15 @@
   <Config Name="Wazuh UDP" Target="514" Default="514" Mode="udp" Description="" Type="Port" Display="always" Required="true" Mask="false">514</Config>
   <Config Name="Wazuh API" Target="55000" Default="55000" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">55000</Config>
   <Config Name="INDEXER_URL" Target="INDEXER_URL" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">https://wazuh-indexer.local:9200</Config>
-  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">admin</Config>
-  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">SecretPassword</Config>
-  <Config Name="FILEBEAT_SSL_VERIFICATION_MODE" Target="FILEBEAT_SSL_VERIFICATION_MODE" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">full</Config>
   <Config Name="SSL_CERTIFICATE_AUTHORITIES" Target="SSL_CERTIFICATE_AUTHORITIES" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">/etc/ssl/root-ca.pem</Config>
   <Config Name="SSL_CERTIFICATE" Target="SSL_CERTIFICATE" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">/etc/ssl/filebeat.pem</Config>
   <Config Name="SSL_KEY" Target="SSL_KEY" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">/etc/ssl/filebeat.key</Config>
-  <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-wui</Config>
-  <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-</Config>
-  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/root-ca.pem</Config>
-  <Config Name="filebeat.pem" Target="/etc/ssl/filebeat.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/manager.pem</Config>
-  <Config Name="filebeat.key" Target="/etc/ssl/filebeat.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/manager-key.pem</Config>
-  <Config Name="ossec.conf" Target="/wazuh-config-mount/etc/ossec.conf" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager/wazuh_manager.conf</Config>
-  <Config Name="wazuh_logs" Target="/var/ossec/logs" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager/logs</Config>
-  <Config Name="filebeat_var" Target="/var/lib/filebeat" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager/filebeat</Config>
-  <Config Name="wazuh_queue" Target="/var/ossec/queue" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager/queue</Config>
+  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca-manager.pem</Config>
+  <Config Name="filebeat.pem" Target="/etc/ssl/filebeat.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/wazuh-manager.pem</Config>
+  <Config Name="filebeat.key" Target="/etc/ssl/filebeat.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/wazuh-manager-key.pem</Config>
+  <Config Name="filebeat.yml" Target="/etc/filebeat/filebeat.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/filebeat-etc/filebeat.yml</Config>
+  <Config Name="ossec.conf" Target="/var/ossec/etc/ossec.conf" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/wazuh_manager.conf</Config>
+  <Config Name="wazuh_logs" Target="/var/ossec/logs" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/wazuh_logs</Config>
+  <Config Name="filebeat_var" Target="/var/lib/filebeat" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/filebeat_var</Config>
+  <Config Name="wazuh_queue" Target="/var/ossec/queue" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/wazuh_queue</Config>
 </Container>

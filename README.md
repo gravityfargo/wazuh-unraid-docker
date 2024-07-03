@@ -40,13 +40,13 @@ TODO
 ## Development
 
 ```bash
-docker build -t gravityfargo/wazuh-unraid-setup:0.0.1 build-docker-images/wazuh-unraid-setup --no-cache
-docker-compose -f build-docker-images/build-indexer.yml --env-file .env build --no-cache builder
-docker-compose -f build-docker-images/build-indexer.yml --env-file .env build --no-cache indexer
+docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
+docker-compose -f build-docker-images/build-indexer.yml --env-file .env build indexer
+docker-compose -f build-docker-images/build-manager.yml --env-file .env build
 
 docker-compose -f docker-compose/wazuh-unraid-setup.yml run --rm generator
-docker-compose -f docker-compose/indexer.yml run --rm indexer
-docker-compose -f build-docker-images/build-manager.yml --env-file .env build --no-cache
+docker-compose -f docker-compose/docker-compose.yml run --rm indexer
+docker-compose -f docker-compose/docker-compose.yml run --rm manager
 ```
 
 ## ENV
