@@ -13,7 +13,7 @@
         stack.</Overview>
   <ReadMe>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/README.md</ReadMe>
   <Category>Security:</Category>
-  <WebUI>https://wazuh-dashboard.local:[PORT:5601]</WebUI>
+  <WebUI/>
   <TemplateURL/>
   <Icon/>
   <ExtraParams/>
