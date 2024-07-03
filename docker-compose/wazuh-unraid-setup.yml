@@ -1,24 +1,26 @@
 # Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 services:
     generator:
-        image: gravityfargo/wazuh-unraid-setup:0.0.1
+        image: gravityfargo/wazuh-unraid-setup:4.8.0
         hostname: wazuh-unraid-setup
         container_name: wazuh-unraid-setup
         environment:
-          - MANAGER_NAME=wazuh-manager
-          - MANAGER_HOSTNAME=wazuh-manager.local
-          - MANAGER_IP=10.10.10.101
-          - INDEXER_NAME=wazuh-indexer
-          - INDEXER_HOSTNAME=wazuh-indexer.local
-          - INDEXER_IP=10.10.10.100
-          - INDEXER_USERNAME=wazuh
-          - INDEXER_PASSWORD=wazuh
-          - DASHBOARD_NAME=wazuh-dashboard
-          - DASHBOARD_HOSTNAME=wazuh-dashboard.local
-          - DASHBOARD_IP=10.10.10.102
-          - UNRAID_USER=root
-          - UNRAID_HOSTNAME=unraid.local
-          - FILEBEAT_SSL_VERIFICATION_MODE=full
+            - "MANAGER_NAME=wazuh-manager"
+            - "MANAGER_HOSTNAME=wazuh-manager.local"
+            - "MANAGER_IP=10.10.10.101"
+            - "INDEXER_NAME=wazuh-indexer"
+            - "INDEXER_HOSTNAME=wazuh-indexer.local"
+            - "INDEXER_IP=10.10.10.100"
+            - "INDEXER_USERNAME=wazuh"
+            - "INDEXER_PASSWORD=wazuh"
+            - "DASHBOARD_NAME=wazuh-indexer"
+            - "DASHBOARD_HOSTNAME=wazuh-dashboard.local"
+            - "DASHBOARD_IP=10.10.10.102"
+            - "UNRAID_USER=root"
+            - "UNRAID_HOSTNAME=unraid.local"
+            - "FILEBEAT_SSL_VERIFICATION_MODE=full"
+            - "API_USERNAME=wazuh-wui"
+            - "API_PASSWORD=MyS3cr37P450r.*-"
         volumes:
             - /mnt/user/appdata/wazuh-manager:/wazuh-manager
             - /mnt/user/appdata/wazuh-indexer:/wazuh-indexer

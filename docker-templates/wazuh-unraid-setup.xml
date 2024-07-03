@@ -3,36 +3,43 @@
   <Name>Wazuh-Unraid-Setup</Name>
   <Repository>gravityfargo/wazuh-unraid-setup:4.8.0</Repository>
   <Registry>https://hub.docker.com/r/gravityfargo/wazuh-unraid-setup</Registry>
-  <Network>none</Network>
+  <Network>bridge</Network>
   <MyIP/>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
   <Support/>
-  <Project></Project>
-  <Overview>This container prepares the configuration, directories, and certificates for the Wazuh stack.</Overview>
-  <ReadMe>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/wazuh-readme.md</ReadMe>
+  <Project/>
+  <Overview>This container prepares the configuration, directories, and certificates for the Wazuh&#xD;
+        stack.</Overview>
+  <ReadMe>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/README.md</ReadMe>
   <Category>Security:</Category>
   <WebUI>https://wazuh-dashboard.local:[PORT:5601]</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/icons/wazuhdashboard.png</Icon>
-  <ExtraParams>--hostname=wazuh-dashboard.local</ExtraParams>
+  <Icon/>
+  <ExtraParams/>
   <PostArgs/>
   <CPUset/>
-  <DateInstalled>1719703986</DateInstalled>
+  <DateInstalled>1719964274</DateInstalled>
   <DonateText/>
   <DonateLink/>
   <Requires/>
-  <Config Name="Port" Target="5601" Default="" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">5601</Config>
-  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">admin</Config>
-  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">SecretPassword</Config>
-  <Config Name="WAZUH_API_URL" Target="WAZUH_API_URL" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">https://wazuh-manager.local:55000</Config>
-  <Config Name="DASHBOARD_USERNAME" Target="DASHBOARD_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">kibanaserver</Config>
-  <Config Name="DASHBOARD_PASSWORD" Target="DASHBOARD_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">kibanaserver</Config>
+  <Config Name="MANAGER_NAME" Target="MANAGER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-manager</Config>
+  <Config Name="MANAGER_HOSTNAME" Target="MANAGER_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-manager.local</Config>
+  <Config Name="MANAGER_IP" Target="MANAGER_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.101</Config>
+  <Config Name="INDEXER_NAME" Target="INDEXER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-indexer</Config>
+  <Config Name="INDEXER_HOSTNAME" Target="INDEXER_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-indexer.local</Config>
+  <Config Name="INDEXER_IP" Target="INDEXER_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.100</Config>
+  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh</Config>
+  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh</Config>
+  <Config Name="DASHBOARD_NAME" Target="DASHBOARD_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-dashboard</Config>
+  <Config Name="DASHBOARD_HOSTNAME" Target="DASHBOARD_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-dashboard.local</Config>
+  <Config Name="DASHBOARD_IP" Target="DASHBOARD_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.102</Config>
+  <Config Name="UNRAID_USER" Target="UNRAID_USER" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">root</Config>
+  <Config Name="UNRAID_HOSTNAME" Target="UNRAID_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">unraid.local</Config>
+  <Config Name="FILEBEAT_SSL_VERIFICATION_MODE" Target="FILEBEAT_SSL_VERIFICATION_MODE" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">full</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-wui</Config>
-  <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-</Config>
-  <Config Name="wazuh-dashboard.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/dashboard.pem</Config>
-  <Config Name="dashboard-key.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/dashboard-key.pem</Config>
-  <Config Name="root-ca.pem" Target="/usr/share/wazuh-dashboard/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/root-ca.pem</Config>
-  <Config Name="opensearch_dashboards.yml" Target="/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-dashboard/opensearch_dashboards.yml</Config>
-  <Config Name="wazuh.yml" Target="/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-dashboard/wazuh.yml</Config>
+  <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-"</Config>
+  <Config Name="Manager Path" Target="/wazuh-manager" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-manager</Config>
+  <Config Name="Indexer Path" Target="/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-indexer</Config>
+  <Config Name="Dashboard Path" Target="/wazuh-dashboard" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-dashboard</Config>
 </Container>
