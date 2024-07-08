@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>WazuhDashboard</Name>
+  <Name>Wazuh-Dashboard</Name>
   <Repository>wazuh/wazuh-dashboard:4.8.0</Repository>
   <Registry>https://registry.hub.docker.com/r/wazuh/wazuh-dashboard</Registry>
   <Network>br0</Network>
@@ -10,29 +10,24 @@
   <Support/>
   <Project>https://wazuh.com/</Project>
   <Overview>The Wazuh dashboard is a flexible and intuitive web user interface for mining, analyzing, and visualizing security events and alerts data. It is also used for the management and monitoring of the Wazuh platform. Additionally, it provides features for role-based access control (RBAC) and single sign-on (SSO).</Overview>
-  <ReadMe>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/wazuh-readme.md</ReadMe>
   <Category>Security:</Category>
   <WebUI>https://wazuh-dashboard.local:[PORT:5601]</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/gravityfargo/unraid-templates/main/icons/wazuhdashboard.png</Icon>
-  <ExtraParams>--hostname=wazuh-dashboard.local</ExtraParams>
+  <Icon>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/icons/wazuhdashboard.png</Icon>
+  <ExtraParams/>
   <PostArgs/>
   <CPUset/>
-  <DateInstalled>1719703986</DateInstalled>
+  <DateInstalled>1720418547</DateInstalled>
   <DonateText/>
   <DonateLink/>
   <Requires/>
   <Config Name="Port" Target="5601" Default="" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">5601</Config>
-  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">admin</Config>
-  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">SecretPassword</Config>
-  <Config Name="WAZUH_API_URL" Target="WAZUH_API_URL" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">https://wazuh-manager.local:55000</Config>
   <Config Name="DASHBOARD_USERNAME" Target="DASHBOARD_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">kibanaserver</Config>
   <Config Name="DASHBOARD_PASSWORD" Target="DASHBOARD_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">kibanaserver</Config>
-  <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-wui</Config>
-  <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-</Config>
-  <Config Name="wazuh-dashboard.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/dashboard.pem</Config>
-  <Config Name="dashboard-key.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/dashboard-key.pem</Config>
-  <Config Name="root-ca.pem" Target="/usr/share/wazuh-dashboard/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer/certs/root-ca.pem</Config>
-  <Config Name="opensearch_dashboards.yml" Target="/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-dashboard/opensearch_dashboards.yml</Config>
-  <Config Name="wazuh.yml" Target="/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-dashboard/wazuh.yml</Config>
+  <Config Name="wazuh-dashboard.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/certs/wazuh-dashboard.pem</Config>
+  <Config Name="dashboard-key.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/certs/wazuh-dashboard-key.pem</Config>
+  <Config Name="root-ca.pem" Target="/usr/share/wazuh-dashboard/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca.pem</Config>
+  <Config Name="wazuh-dashboard-config" Target="/usr/share/wazuh-dashboard/data/wazuh/config" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-dashboard/wazuh-dashboard-config/</Config>
+  <Config Name="wazuh-dashboard-custom" Target="/usr/share/wazuh-dashboard/plugins/wazuh/public/assets/custom" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-dashboard/wazuh-dashboard-custom/</Config>
+  <Config Name="opensearch_dashboards.yml" Target="/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/opensearch_dashboards.yml</Config>
 </Container>
