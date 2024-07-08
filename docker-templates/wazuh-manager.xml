@@ -30,7 +30,7 @@
   <Config Name="SSL_CERTIFICATE_AUTHORITIES" Target="SSL_CERTIFICATE_AUTHORITIES" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">/etc/ssl/root-ca.pem</Config>
   <Config Name="SSL_CERTIFICATE" Target="SSL_CERTIFICATE" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">/etc/ssl/filebeat.pem</Config>
   <Config Name="SSL_KEY" Target="SSL_KEY" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">/etc/ssl/filebeat.key</Config>
-  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca-manager.pem</Config>
+  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca.pem</Config>
   <Config Name="filebeat.pem" Target="/etc/ssl/filebeat.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/filebeat.pem</Config>
   <Config Name="filebeat.key" Target="/etc/ssl/filebeat.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/filebeat.key</Config>
   <Config Name="filebeat.yml" Target="/etc/filebeat/filebeat.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/filebeat-etc/filebeat.yml</Config>
