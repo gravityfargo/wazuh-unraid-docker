@@ -1,5 +1,24 @@
 # Wazuh containers for Docker on Unraid
 
+## Details
+
+### gravityfargo/wazuh-unraid-setup
+
+-   Executes the same code as `wazuh/wazuh-certs-generator:0.0.2`
+-   Keeping track of the file name mappings was tedious so they are renamed to match their mapping inside the containers.
+    -   `wazuh.indexer-key.pem` -> `wazuh.indexer.key`
+    -   `wazuh-manager.pem` -> `filebeat.pem`
+    -   `wazuh-manager-key.pem` -> `filebeat.key`
+    -   `wazuh_manager.conf` -> `ossec.conf`
+-   Creates appdata directories for the Wazuh Manager, Indexer, and Dashboard
+-   Populates the appdata directories with several config files edited with variables entered
+    in the Unraid Docker template. Several variables are ommited from the Wazuh Manager template
+    because this container performs the same function ahead of time.
+
+### gravityfargo/wazuh-unraid-setup
+
+-   All volumes from the stock template are mapped to paths in the appdata directory.
+
 ## Usage
 
 ### 1. Setup `max_map_count`
@@ -41,12 +60,13 @@ TODO
 
 ```bash
 docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
-docker-compose -f build-docker-images/build-indexer.yml --env-file .env build indexer
 docker-compose -f build-docker-images/build-manager.yml --env-file .env build
 
 docker-compose -f docker-compose/wazuh-unraid-setup.yml run --rm generator
-docker-compose -f docker-compose/docker-compose.yml run --rm indexer
 docker-compose -f docker-compose/docker-compose.yml run --rm manager
+
+docker push gravityfargo/wazuh-unraid-setup:4.8.0
+docker push gravityfargo/wazuh-manager:4.8.0
 ```
 
 ## ENV
