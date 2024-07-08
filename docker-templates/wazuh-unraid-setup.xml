@@ -32,7 +32,7 @@
   <Config Name="DASHBOARD_NAME" Target="DASHBOARD_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-dashboard</Config>
   <Config Name="DASHBOARD_IP" Target="DASHBOARD_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.102</Config>
   <Config Name="UNRAID_USER" Target="UNRAID_USER" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">root</Config>
-  <Config Name="UNRAID_IP" Target="UNRAID_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">unraid.local</Config>
+  <Config Name="UNRAID_IP" Target="UNRAID_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.10</Config>
   <Config Name="FILEBEAT_SSL_VERIFICATION_MODE" Target="FILEBEAT_SSL_VERIFICATION_MODE" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">full</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-wui</Config>
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-"</Config>
