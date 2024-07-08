@@ -9,6 +9,7 @@ rm -rf /wazuh-indexer/certs
 rm -rf /wazuh-certificates
 mkdir -p /wazuh-indexer/certs
 mkdir -p /wazuh-manager/filebeat-etc
+mkdir -p /wazuh-manager/ossec-api-configuration
 mkdir -p /wazuh-dashboard
 
 cp /config/certs.yml /config.yml
@@ -16,16 +17,17 @@ cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
 cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
 cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
 cp /config/indexer.yml /wazuh-indexer/indexer.yml
-cp /config/wazuh_manager.conf /wazuh-manager/wazuh_manager.conf
+cp /config/wazuh_manager.conf /wazuh-manager/ossec.conf
+cp /config/admin.json /wazuh-manager/ossec-api-configuration/admin.json
 
 cp /config/filebeat.yml /wazuh-manager/filebeat-etc/filebeat.yml
-
 chmod 0600 /wazuh-indexer/indexer.yml
 chmod 0600 /wazuh-indexer/internal_users.yml
 
 chown 1000:1000 -R /wazuh-dashboard
 chown 1000:1000 -R /wazuh-indexer
 chown 1000:1000 -R /wazuh-manager
+chown 0:0 /wazuh-manager/filebeat-etc/filebeat.yml
 
 ##############################################################################
 # Downloading Cert Gen Tool
@@ -72,15 +74,20 @@ cp /wazuh-certificates/* /wazuh-indexer/certs/
 cp /wazuh-indexer/certs/root-ca.pem /wazuh-indexer/certs/root-ca-manager.pem
 cp /wazuh-indexer/certs/root-ca.key /wazuh-indexer/certs/root-ca-manager.key
 
-echo "Changing certificate permissions"
-chmod -R 500 /wazuh-indexer/certs
-chmod -R 400 /wazuh-indexer/certs/*
-
-echo "Certificates created successfully"
-echo "Completed"
+mv /wazuh-indexer/certs/wazuh-indexer-key.pem /wazuh-indexer/certs/wazuh.indexer.key
+mv /wazuh-indexer/certs/wazuh-indexer.pem /wazuh-indexer/certs/wazuh.indexer.pem
+mv /wazuh-indexer/certs/wazuh-manager.pem /wazuh-indexer/certs/filebeat.pem
+mv /wazuh-indexer/certs/wazuh-manager-key.pem /wazuh-indexer/certs/filebeat.key
 
 # chown 999:999  /wazuh-indexer/certs/root-ca-manager.pem
 # chown 999:999  /wazuh-indexer/certs/root-ca-manager.key
+
+chmod -R 500 /wazuh-indexer/certs
+chmod -R 400 /wazuh-indexer/certs/*
+chown 1000:1000 /wazuh-indexer/certs/*
+
+echo "Certificates created successfully"
+echo "wazuh-unraid-setup: Finished!"
 
 # for i in ${node_names[@]};
 # do
