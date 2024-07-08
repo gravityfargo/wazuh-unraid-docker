@@ -7,7 +7,7 @@ ENV MANAGER_NAME="wazuh-manager" \
     INDEXER_IP="10.10.10.100" \
     INDEXER_USERNAME="wazuh" \
     INDEXER_PASSWORD="wazuh" \
-    DASHBOARD_NAME="wazuh-indexer" \
+    DASHBOARD_NAME="wazuh-dashboard" \
     DASHBOARD_IP="10.10.10.102" \
     UNRAID_USER="root" \
     UNRAID_IP="10.10.10.10" \
@@ -42,7 +42,7 @@ RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  &&
     sed -i "s,password:.*,password: \"${API_PASSWORD}\",g" /config/wazuh.yml && \
     #
     sed -i "s,server.host:.*,server.host: ${DASHBOARD_IP},1" /config/opensearch_dashboards.yml && \
-    sed -i "s,opensearch.hosts:.* ,opensearch.hosts: https://${INDEXER_IP}:9200,1" /config/opensearch_dashboards.yml && \
+    sed -i "s,opensearch.hosts:.*,opensearch.hosts: https://${INDEXER_IP}:9200,1" /config/opensearch_dashboards.yml && \
     #
     sed -i "s,<host>wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf && \
     sed -i "s,<host>root@unraid</host>,<host>${UNRAID_USER}@${UNRAID_IP}</host>,1" /config/wazuh_manager.conf && \
