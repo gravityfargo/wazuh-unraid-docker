@@ -15,6 +15,14 @@
     in the Unraid Docker template. Several variables are ommited from the Wazuh Manager template
     because this container performs the same function ahead of time.
 
+#### Keys that were consolidated
+- dashboard
+    - INDEXER_USERNAME
+    - INDEXER_PASSWORD
+    - WAZUH_API_URL
+    - WAZUH_API_USERNAME
+    - WAZUH_API_PASSWORD
+
 ### gravityfargo/wazuh-unraid-setup
 
 -   All volumes from the stock template are mapped to paths in the appdata directory.
