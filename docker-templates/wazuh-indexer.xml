@@ -25,11 +25,12 @@ password: SecretPassword</Overview>
   <DonateLink/>
   <Requires/>
   <Config Name="OPENSEARCH_JAVA_OPTS" Target="OPENSEARCH_JAVA_OPTS" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">-Xms1g -Xmx1g</Config>
+  <Config Name="wazuh-indexer-data" Target="/var/lib/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/wazuh-indexer-data</Config>
   <Config Name="root-ca.pem" Target="/usr/share/wazuh-indexer/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca.pem</Config>
   <Config Name="wazuh.indexer.key" Target="/usr/share/wazuh-indexer/certs/wazuh.indexer.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/wazuh.indexer.key</Config>
   <Config Name="wazuh.indexer.pem" Target="/usr/share/wazuh-indexer/certs/wazuh.indexer.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/wazuh.indexer.pem</Config>
   <Config Name="admin.pem" Target="/usr/share/wazuh-indexer/certs/admin.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/admin.pem</Config>
   <Config Name="admin-key.pem" Target="/usr/share/wazuh-indexer/certs/admin-key.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/admin-key.pem</Config>
-  <Config Name="opensearch.yml" Target="/usr/share/wazuh-indexer/opensearch.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/indexer.yml</Config>
+  <Config Name="opensearch.yml" Target="/usr/share/wazuh-indexer/opensearch.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/opensearch.yml</Config>
   <Config Name="internal_users.yml" Target="/usr/share/wazuh-indexer/opensearch-security/internal_users.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/internal_users.yml</Config>
 </Container>

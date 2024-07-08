@@ -7,29 +7,29 @@
 echo "Copying configuration files"
 rm -rf /wazuh-indexer/certs
 rm -rf /wazuh-certificates
-mkdir -p /wazuh-indexer/certs
-mkdir -p /wazuh-manager/filebeat-etc
-mkdir -p /wazuh-manager/ossec-api-configuration/ssl
-mkdir -p /wazuh-dashboard/certs
-mkdir -p /wazuh-dashboard/wazuh-dashboard-config
-
-cp /config/certs.yml /config.yml
 # cp /config/certs.yml /wazuh-indexer/certs.yml
-cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
-cp /config/wazuh.yml /wazuh-dashboard/wazuh-dashboard-config/wazuh.yml
-cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
-cp /config/indexer.yml /wazuh-indexer/indexer.yml
-cp /config/wazuh_manager.conf /wazuh-manager/ossec.conf
-cp /config/admin.json /wazuh-manager/ossec-api-configuration/admin.json
+cp /config/certs.yml /config.yml
 
-cp /config/filebeat.yml /wazuh-manager/filebeat-etc/filebeat.yml
-chmod 0600 /wazuh-indexer/indexer.yml
-chmod 0600 /wazuh-indexer/internal_users.yml
+# indexer
+mkdir -p /wazuh-indexer/certs
+mkdir -p /wazuh-indexer/wazuh-indexer-data
+cp /config/wazuh.indexer.yml /wazuh-indexer/opensearch.yml
+# chmod 0600 /wazuh-indexer/opensearch.yml
+cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
+# chmod 0600 /wazuh-indexer/internal_users.yml
+
+# manager
+cp /config/wazuh_manager.conf /wazuh-manager/ossec.conf
+
+# dashboard
+mkdir -p /wazuh-dashboard/certs
+cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
+cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
 
 chown 1000:1000 -R /wazuh-dashboard
 chown 1000:1000 -R /wazuh-indexer
 chown 1000:1000 -R /wazuh-manager
-chown 0:0 /wazuh-manager/filebeat-etc/filebeat.yml
+
 
 ##############################################################################
 # Downloading Cert Gen Tool
