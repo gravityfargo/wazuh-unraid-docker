@@ -31,7 +31,7 @@ RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  &&
     sed -i "s,name: wazuh.dashboard,name: ${DASHBOARD_NAME},1" /config/certs.yml && \
     sed -i "s,ip: wazuh.dashboard,ip: ${DASHBOARD_IP},1" /config/certs.yml && \
     # 
-    sed -i "s,\"username\":.*,\"username\": \"${API_USERNAME}\",1" /config/admin.json && \
+    sed -i "s|\"username\":.*|\"username\": \"${API_USERNAME}\",|1" /config/admin.json && \
     sed -i "s,\"password\":.*,\"password\": \"${API_PASSWORD}\",1" /config/admin.json && \
     #
     sed -i "s,network.host:.*,network.host: \"${INDEXER_IP}\",1" /config/indexer.yml && \
@@ -46,8 +46,7 @@ RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  &&
     #
     sed -i "s,<host>wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf && \
     sed -i "s,<host>root@unraid</host>,<host>${UNRAID_USER}@${UNRAID_IP}</host>,1" /config/wazuh_manager.conf && \
-    sed -i "s,<bind_addr>0.0.0.0</bind_addr>,<bind_addr>${MANAGER_IP}</bind_addr>,1" /config/wazuh_manager.conf && \
-    sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_NAME}</node>,1" /config/wazuh_manager.conf && \
+    sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf && \
     #
     sed -i "s,hosts:.*,hosts: ['${INDEXER_IP}'],g" /config/filebeat.yml && \
     sed -i "s,username:.*,username: '${INDEXER_USERNAME}',g" /config/filebeat.yml && \
