@@ -24,18 +24,15 @@
   <DonateLink/>
   <Requires/>
   <Config Name="MANAGER_NAME" Target="MANAGER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-manager</Config>
-  <Config Name="MANAGER_HOSTNAME" Target="MANAGER_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-manager.local</Config>
   <Config Name="MANAGER_IP" Target="MANAGER_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.101</Config>
   <Config Name="INDEXER_NAME" Target="INDEXER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-indexer</Config>
-  <Config Name="INDEXER_HOSTNAME" Target="INDEXER_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-indexer.local</Config>
   <Config Name="INDEXER_IP" Target="INDEXER_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.100</Config>
-  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh</Config>
-  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh</Config>
+  <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">admin</Config>
+  <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">SecretPassword</Config>
   <Config Name="DASHBOARD_NAME" Target="DASHBOARD_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-dashboard</Config>
-  <Config Name="DASHBOARD_HOSTNAME" Target="DASHBOARD_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-dashboard.local</Config>
   <Config Name="DASHBOARD_IP" Target="DASHBOARD_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">10.10.10.102</Config>
   <Config Name="UNRAID_USER" Target="UNRAID_USER" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">root</Config>
-  <Config Name="UNRAID_HOSTNAME" Target="UNRAID_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">unraid.local</Config>
+  <Config Name="UNRAID_IP" Target="UNRAID_HOSTNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">unraid.local</Config>
   <Config Name="FILEBEAT_SSL_VERIFICATION_MODE" Target="FILEBEAT_SSL_VERIFICATION_MODE" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">full</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">wazuh-wui</Config>
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-"</Config>
