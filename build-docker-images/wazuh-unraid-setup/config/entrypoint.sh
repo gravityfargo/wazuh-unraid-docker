@@ -9,7 +9,7 @@ rm -rf /wazuh-indexer/certs
 rm -rf /wazuh-certificates
 mkdir -p /wazuh-indexer/certs
 mkdir -p /wazuh-manager/filebeat-etc
-mkdir -p /wazuh-manager/ossec-api-configuration
+mkdir -p /wazuh-manager/ossec-api-configuration/ssl
 mkdir -p /wazuh-dashboard
 
 cp /config/certs.yml /config.yml
