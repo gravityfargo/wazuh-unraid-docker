@@ -1,72 +1,98 @@
-# Wazuh containers for Docker on Unraid
+# Wazuh for Docker on Unraid
 
-## Details
+This repo holds 4 Unraid docker templates and two docker image builds.
 
-### gravityfargo/wazuh-unraid-setup
+The templates are for the Wazuh Manager, Indexer, and Dashboard.
+The fourth template is a setup container that builds the Wazuh Agent from source,
+installs it to the cache directory, creates and populates the appdata directories for
+the wazuh applications with the necessary files, user scripts, and generating self signed cetificates in
+the process.
 
--   Executes the same code as `wazuh/wazuh-certs-generator:0.0.2`
--   Keeping track of the file name mappings was tedious so they are renamed to match their mapping inside the containers.
-    -   `wazuh.indexer-key.pem` -> `wazuh.indexer.key`
-    -   `wazuh-manager.pem` -> `filebeat.pem`
-    -   `wazuh-manager-key.pem` -> `filebeat.key`
-    -   `wazuh_manager.conf` -> `ossec.conf`
--   Creates appdata directories for the Wazuh Manager, Indexer, and Dashboard
--   Populates the appdata directories with several config files edited with variables entered
-    in the Unraid Docker template. Several variables are ommited from the Wazuh Manager template
-    because this container performs the same function ahead of time.
+If you do not want to use the setup container for final configuration, thats fine, but I would recommend
+running it to create the directories structure with the necessary permissions, then moving in your own
+configuration files.
 
-#### Keys that were consolidated
-- dashboard
-    - INDEXER_USERNAME
-    - INDEXER_PASSWORD
-    - WAZUH_API_URL
-    - WAZUH_API_USERNAME
-    - WAZUH_API_PASSWORD
+I have not tested changing any of the enviornment variables. I would recommend
+using the default values to get everything running then manually modify configuration files after the fact.
 
-### gravityfargo/wazuh-unraid-setup
-
--   All volumes from the stock template are mapped to paths in the appdata directory.
+Ignoring everything else, you can just change IP addresses and run the containers as is.
+Changing the passwords is also a good idea, but I have not tested that with these templates.
 
 ## Usage
 
-### 1. Setup `max_map_count`
+-   A network bridge is requred. `br0` in my case.
+-   3 IP addresses are required. One for the manager, one for the indexer, and one for the
+    dashboard.
+-   The manager template has my custom image in it. You can use the official image if you want. My
+    image is built from the official image and only adds the `expect` package
+    to it which is requred for agentless monitoring. I have not tested the
+    agentless monitoring yet, it was just a feature I wanted to have available. The stock
+    image will work just fine.
+-   The startup order is: Indexer, Dashboard, Manager. The manager must be started first.
 
 1. Install the `CA User Scripts` [plugin](https://forums.unraid.net/topic/48286-plugin-ca-user-scripts/)
-2. Go to [http://unraid.local/Apps/Settings/Userscripts](http://10.10.10.10/Apps/Settings/Userscripts)
-3. Add a new script named `vm.max_map_count`
-4. Add the following code to the script:
+2. Install the `Wazuh-Unraid-Setup` container. It can be deleted after the setup is complete.
+   If you re-run it, it will recreate the certificates and overwrite the existing ones.
+3. Go to the "Userscripts" settings page.
+4. Set `wazuh_prep` to run "At First Array Start Only".
+5. Set `wazuh_agent_start` to run "At Startup of Array".
+6. Set `wazuh_agent_stop` to run "At Stopping of Array".
+7. Manually run the `wazuh_prep` script.
+8. Install the `Wazuh-Manager`, `Wazuh-Indexer`, and `Wazuh-Dashboard` containers. Install it, watch the logs for errors,
+   and only start the next container after the previous one has started successfully.
+9. Manually run the `wazuh_agent_start` script.
+
+### Bonus: Graylog
+
+
+
+## Docker Containers
+
+### gravityfargo/wazuh-unraid-setup
+
+-   built upon `wazuh/wazuh-certs-generator:0.0.1`.
+-   Builds the Wazuh Agent from source inside the container and moves it to the chosen location on the array.
+-   Uses [andy5995/slackware-build-essential](https://hub.docker.com/r/andy5995/slackware-build-essential/tags) as a base image.
+-   Creates appdata directories for the Wazuh Manager, Indexer, and Dashboard and populates them with the necessary files.
+-   Creates the user scripts `wazuh_agent_start`, `wazuh_agent_stop`, and `wazuh_prep`.
+
+### gravityfargo/wazuh-unraid-setup
+
+-   Stock, expect the addition of the `expect` package for agentless monitoring.
+
+## Directory Structure that is _Created_
 
 ```bash
-#!/bin/bash
-sysctl -w vm.max_map_count=262144
+/mnt/user/appdata
+├── wazuh-dashboard
+│   ├── certs
+│   │   ├── wazuh-dashboard-key.pem
+│   │   └── wazuh-dashboard.pem
+│   ├── opensearch_dashboards.yml
+│   └── wazuh.yml
+├── wazuh-indexer
+│   ├── certs
+│   │   ├── admin-key.pem
+│   │   ├── admin.pem
+│   │   ├── filebeat.key
+│   │   ├── filebeat.pem
+│   │   ├── root-ca.key
+│   │   ├── root-ca.pem
+│   │   ├── wazuh.indexer.key
+│   │   └── wazuh.indexer.pem
+│   ├── internal_users.yml
+│   ├── opensearch.yml
+│   └── wazuh-indexer-data
+└── wazuh-manager
+    └── ossec.conf
 ```
-
-5. Save the script, and set it to run on array start.
-6. Manually run the script.
-
-### 2. Deploy wazuh-unraid-setup
-
-TODO
-
-### 3. Deploy Indexer/Manager/Dashboard
-
-TODO
-
-### 4. Unraid agentless registration
-
-```bash
-docker exec -it WazuhManager /bin/bash
-/var/ossec/agentless/register_host.sh add root@unraid.local NTE0vmd5tve8tyh_eve
-/var/ossec/agentless/register_host.sh list
-```
-
-## Using the Docker Compose Manager plugin
-
-TODO
 
 ## Development
 
+Helpful when being a script kiddie.
+
 ```bash
+export DOCKER_BUILDKIT=1
 docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
 docker-compose -f build-docker-images/build-manager.yml --env-file .env build
 
@@ -75,42 +101,9 @@ docker-compose -f docker-compose/docker-compose.yml run --rm manager
 
 docker push gravityfargo/wazuh-unraid-setup:4.8.0
 docker push gravityfargo/wazuh-manager:4.8.0
-```
 
-## ENV
-
-### Dashboard
-
-These variables have been removed. If you want to use them, edit `${WAZUH_DASHBOARD_PATH}/wazuh.yml` directly.
-
-```yaml
-CHECKS_PATTERN=""
-CHECKS_TEMPLATE=""
-CHECKS_API=""
-CHECKS_SETUP=""
-EXTENSIONS_PCI=""
-EXTENSIONS_GDPR=""
-EXTENSIONS_HIPAA=""
-EXTENSIONS_NIST=""
-EXTENSIONS_TSC=""
-EXTENSIONS_AUDIT=""
-EXTENSIONS_OSCAP=""
-EXTENSIONS_CISCAT=""
-EXTENSIONS_AWS=""
-EXTENSIONS_GCP=""
-EXTENSIONS_GITHUB=""
-EXTENSIONS_OFFICE=""
-EXTENSIONS_VIRUSTOTAL=""
-EXTENSIONS_OSQUERY=""
-EXTENSIONS_DOCKER=""
-APP_TIMEOUT=""
-API_SELECTOR=""
-IP_SELECTOR=""
-IP_IGNORE=""
-WAZUH_MONITORING_ENABLED=""
-WAZUH_MONITORING_FREQUENCY=""
-WAZUH_MONITORING_SHARDS=""
-WAZUH_MONITORING_REPLICAS=""
+/var/ossec/bin/manage_agents -l # List agents
+/var/ossec/bin/manage_agents -r 001 # Remove an agent
 ```
 
 ## Credits
@@ -123,6 +116,8 @@ Ancestor projects of Wazuh's are based on:
 -   "xetus-oss" dockerfiles, which can be found at [https://github.com/xetus-oss/docker-ossec-server](https://github.com/xetus-oss/docker-ossec-server)
 
 Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
+
+Thanks ChatGPT for making the icon for my container.
 
 ## Official Wazuh links
 
