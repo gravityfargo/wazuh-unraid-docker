@@ -21,7 +21,7 @@
   <DonateText/>
   <DonateLink/>
   <Requires/>
-  <Config Name="Port" Target="5601" Default="" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">5601</Config>
+  <Config Name="Dashboard" Target="5601" Default="5601" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">5601</Config>
   <Config Name="INDEXER_USERNAME" Target="INDEXER_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">admin</Config>
   <Config Name="INDEXER_PASSWORD" Target="INDEXER_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">SecretPassword</Config>
   <Config Name="WAZUH_API_URL" Target="WAZUH_API_URL" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">https://10.10.10.101</Config>
