@@ -5,21 +5,21 @@ services:
         hostname: wazuh-unraid-setup
         container_name: wazuh-unraid-setup
         environment:
+            - INSTALL_AGENT=false
+            - INSTALL_SCRIPTS=true
+            - AGENT_DIRECTORY=/mnt/user/appdata/wazuh-agent
             - MANAGER_NAME=wazuh-manager
             - MANAGER_IP=10.10.10.101
             - INDEXER_NAME=wazuh-indexer
             - INDEXER_IP=10.10.10.100
-            - INDEXER_USERNAME=admin
-            - INDEXER_PASSWORD=SecretPassword
             - DASHBOARD_NAME=wazuh-dashboard
             - DASHBOARD_IP=10.10.10.102
-            - UNRAID_USER=root
-            - UNRAID_IP=10.10.10.10
-            - FILEBEAT_SSL_VERIFICATION_MODE=full
             - API_USERNAME=wazuh-wui
             - API_PASSWORD=MyS3cr37P450r.*-
         volumes:
             - /mnt/user/appdata/wazuh-manager:/wazuh-manager
             - /mnt/user/appdata/wazuh-indexer:/wazuh-indexer
             - /mnt/user/appdata/wazuh-dashboard:/wazuh-dashboard
-            - /mnt/user/cache/wazuh-agent:/agent
+            - /mnt/user/appdata/wazuh-agent:/agent
+            # - /boot/config/plugins/user.scripts/scripts:/scripts
+            - /mnt/user/appdata/scripts:/scripts
