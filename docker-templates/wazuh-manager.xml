@@ -35,9 +35,10 @@
   <Config Name="SSL_KEY" Target="SSL_KEY" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">/etc/ssl/filebeat.key</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">wazuh-wui</Config>
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="advanced-hide" Required="false" Mask="false">MyS3cr37P450r.*-</Config>
-  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca.pem</Config>
-  <Config Name="filebeat.pem" Target="/etc/ssl/filebeat.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/filebeat.pem</Config>
-  <Config Name="filebeat.key" Target="/etc/ssl/filebeat.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/filebeat.key</Config>
+  <Config Name="root-ca.pem" Target="/etc/ssl/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/certs/root-ca.pem</Config>
+  <Config Name="filebeat.pem" Target="/etc/ssl/filebeat.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/certs/filebeat.pem</Config>
+  <Config Name="filebeat.key" Target="/etc/ssl/filebeat.key" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/certs/filebeat.key</Config>
   <Config Name="ossec.conf" Target="/wazuh-config-mount/etc/ossec.conf" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/ossec.conf</Config>
   <Config Name="ossec_logs" Target="/var/ossec/logs" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/ossec_logs</Config>
+  <Config Name="ossec_queue" Target="/var/ossec/queue" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager/ossec_queue</Config>
 </Container>

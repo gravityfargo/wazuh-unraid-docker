@@ -11,7 +11,7 @@
   <Project>https://wazuh.com/</Project>
   <Overview>The Wazuh dashboard is a flexible and intuitive web user interface for mining, analyzing, and visualizing security events and alerts data. It is also used for the management and monitoring of the Wazuh platform. Additionally, it provides features for role-based access control (RBAC) and single sign-on (SSO).</Overview>
   <Category>Security:</Category>
-  <WebUI>https://wazuh-dashboard.local:[PORT:5601]</WebUI>
+  <WebUI>https://[IP]:[PORT:5601]</WebUI>
   <TemplateURL/>
   <Icon>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/icons/wazuhdashboard.png</Icon>
   <ExtraParams/>
@@ -31,7 +31,7 @@
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="false" Mask="false">MyS3cr37P450r.*-</Config>
   <Config Name="wazuh-dashboard.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/certs/wazuh-dashboard.pem</Config>
   <Config Name="dashboard-key.pem" Target="/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/certs/wazuh-dashboard-key.pem</Config>
-  <Config Name="root-ca.pem" Target="/usr/share/wazuh-dashboard/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer/certs/root-ca.pem</Config>
+  <Config Name="root-ca.pem" Target="/usr/share/wazuh-dashboard/certs/root-ca.pem" Default="" Mode="ro" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/certs/root-ca.pem</Config>
   <Config Name="opensearch_dashboards.yml" Target="/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard/opensearch_dashboards.yml</Config>
   <Config Name="wazuh.yml" Target="/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-dashboard/wazuh.yml</Config>
 </Container>
