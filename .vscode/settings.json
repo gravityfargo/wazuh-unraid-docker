@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "build-docker-images/wazuh-unraid-setup/config/preloaded-vars.conf": "bash"
+        "**/build-docker-images/wazuh-unraid-setup/config/preloaded-vars.conf": "shellscript",
+        "**/build-docker-images/wazuh-unraid-setup/config/wazuh_manager.conf": "xml",
+        "**/docker-compose/wazuh-unraid-setup.yml": "dockercompose",
     },
+    "tasksStatusbar.taskLabelFilter": ".*",
 }
