@@ -1,5 +1,5 @@
 # Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
-FROM amazonlinux:2023
+FROM andy5995/slackware-build-essential:15.0
 
 ENV MANAGER_NAME="wazuh-manager" \
     MANAGER_IP="10.10.10.101" \
@@ -11,9 +11,6 @@ ENV MANAGER_NAME="wazuh-manager" \
     UNRAID_IP="10.10.10.10" \
     API_USERNAME="wazuh-wui" \
     API_PASSWORD="MyS3cr37P450r.*-"
-
-RUN yum install curl-minimal openssl gettext -y  && \
-    yum clean all
 
 WORKDIR /
 COPY config/entrypoint.sh /
@@ -40,6 +37,8 @@ RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  &&
     #
     sed -i "s,<host>https://wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf && \
     sed -i "s,<host>root@unraid</host>,<host>${UNRAID_USER}@${UNRAID_IP}</host>,1" /config/wazuh_manager.conf && \
-    sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf
-
+    sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf && \
+    # 
+    sed -i "s,USER_AGENT_SERVER_IP=.*,USER_AGENT_SERVER_IP=\"${MANAGER_IP}\",g" /config/preloaded-vars.conf
+    
 ENTRYPOINT ["/entrypoint.sh"]
