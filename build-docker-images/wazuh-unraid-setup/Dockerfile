@@ -7,10 +7,11 @@ ENV MANAGER_NAME="wazuh-manager" \
     INDEXER_IP="10.10.10.100" \
     DASHBOARD_NAME="wazuh-dashboard" \
     DASHBOARD_IP="10.10.10.102" \
-    UNRAID_USER="root" \
-    UNRAID_IP="10.10.10.10" \
     API_USERNAME="wazuh-wui" \
-    API_PASSWORD="MyS3cr37P450r.*-"
+    API_PASSWORD="MyS3cr37P450r.*-" \
+    INSTALL_AGENT="true" \
+    INSTALL_SCRIPTS="true" \
+    AGENT_DIRETORY="/mnt/user/appdata/wazuh-agent"
 
 WORKDIR /
 COPY config/entrypoint.sh /
@@ -36,7 +37,6 @@ RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  &&
     sed -i "s,opensearch.hosts:.*,opensearch.hosts: https://${INDEXER_IP}:9200,1" /config/opensearch_dashboards.yml && \
     #
     sed -i "s,<host>https://wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf && \
-    sed -i "s,<host>root@unraid</host>,<host>${UNRAID_USER}@${UNRAID_IP}</host>,1" /config/wazuh_manager.conf && \
     sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf && \
     # 
     sed -i "s,USER_AGENT_SERVER_IP=.*,USER_AGENT_SERVER_IP=\"${MANAGER_IP}\",g" /config/preloaded-vars.conf
