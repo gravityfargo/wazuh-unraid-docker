@@ -15,7 +15,7 @@
   <Category>Security:</Category>
   <WebUI/>
   <TemplateURL/>
-  <Icon/>
+  <Icon>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/icons/setup.png</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
@@ -36,4 +36,5 @@
   <Config Name="Manager Path" Target="/wazuh-manager" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-manager</Config>
   <Config Name="Indexer Path" Target="/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-indexer</Config>
   <Config Name="Dashboard Path" Target="/wazuh-dashboard" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh-dashboard</Config>
+  <Config Name="Agent Path" Target="/agent" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/cache/wazuh-agent</Config>
 </Container>
