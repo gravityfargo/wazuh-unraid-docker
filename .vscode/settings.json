@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "build-docker-images/wazuh-unraid-setup/config/preloaded-vars.conf": "bash"
+    },
+}
