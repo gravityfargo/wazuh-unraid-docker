@@ -22,3 +22,4 @@ services:
             - /mnt/user/appdata/wazuh-manager:/wazuh-manager
             - /mnt/user/appdata/wazuh-indexer:/wazuh-indexer
             - /mnt/user/appdata/wazuh-dashboard:/wazuh-dashboard
+            - /mnt/user/cache/wazuh-agent:/agent
