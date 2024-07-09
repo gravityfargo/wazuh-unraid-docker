@@ -1,0 +1,37 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "wazuh-dashboard.xml",
+            "type": "shell",
+            "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-dashboard.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-wazuh-dashboard.xml"
+        },
+        {
+            "label": "wazuh-manager.xml",
+            "type": "shell",
+            "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-manager.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-wazuh-manager.xml"
+        },
+        {
+            "label": "wazuh-indexer.xml",
+            "type": "shell",
+            "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-indexer.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-wazuh-indexer.xml"
+        },
+        {
+            "label": "wazuh-unraid-setup.xml",
+            "type": "shell",
+            "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-unraid-setup.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-Wazuh-Unraid-Setup.xml"
+        },
+        {
+            "label": "build wazuh-unraid-setup",
+            "type": "shell",
+            "command": "docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 ${workspaceFolder}/build-docker-images/wazuh-unraid-setup"
+        },
+        {
+            "label": "push wazuh-unraid-setup",
+            "type": "shell",
+            "command": "docker push gravityfargo/wazuh-unraid-setup:4.8.0"
+        },
+    ]
+}
