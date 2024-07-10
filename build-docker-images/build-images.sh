@@ -99,65 +99,37 @@ main() {
             help 0
             ;;
         "-a" | "--all")
-            if [ -n "${2}" ]; then
-                build || clean 1
-                docker-compose -f build-docker-images/build-images.yml --env-file .env build
-                return 0
-            else
-                help 1
-            fi
+            build || clean 1
+            docker-compose -f build-docker-images/build-images.yml --env-file .env build
+            return 0
             ;;
         "-bus" | "--build-unraid-setup")
-            if [ -n "${2}" ]; then
-                build || clean 1
-                docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
-                return 0
-            else
-                help 1
-            fi
+            build || clean 1
+            docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
+            return 0
             ;;
         "-pus" | "--push-unraid-setup")
-            if [ -n "${2}" ]; then
-                docker push gravityfargo/wazuh-unraid-setup:4.8.0
-                return 0
-            else
-                help 1
-            fi
+            docker push gravityfargo/wazuh-unraid-setup:4.8.0
+            return 0
             ;;
         "-bm" | "--build-manager")
-            if [ -n "${2}" ]; then
-                build || clean 1
-                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-manager
-                return 0
-            else
-                help 1
-            fi
+            build || clean 1
+            docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-manager
+            return 0
             ;;
         "-pm" | "--push-manager")
-            if [ -n "${2}" ]; then
-                docker push gravityfargo/wazuh-manager:4.8.0
-                return 0
-            else
-                help 1
-            fi
+            docker push gravityfargo/wazuh-manager:4.8.0
+            return 0
             ;;
         "-bi" | "--build-indexer")
-            if [ -n "${2}" ]; then
-                build || clean 1
-                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-indexer
-                return 0
-            else
-                help 1
-            fi
+            build || clean 1
+            docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-indexer
+            return 0
             ;;
         "-bd" | "--build-dashboard")
-            if [ -n "${2}" ]; then
-                build || clean 1
-                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-dashboard
-                return 0
-            else
-                help 1
-            fi
+            build || clean 1
+            docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-dashboard
+            return 0
             ;;
         *)
             help 1
