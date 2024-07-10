@@ -6,6 +6,7 @@ IMAGE_VERSION=${WAZUH_IMAGE_VERSION}
 
 # Wazuh package generator
 # Copyright (C) 2023, Wazuh Inc.
+# Modifications by GitHub user gravityfargo, 2024
 #
 # This program is a free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public
@@ -70,9 +71,6 @@ build() {
     echo WAZUH_FILEBEAT_MODULE=$WAZUH_FILEBEAT_MODULE >> .env
     echo WAZUH_UI_REVISION=$WAZUH_UI_REVISION >> .env
 
-    docker-compose -f build-docker-images/build-images.yml --env-file .env build --no-cache
-
-    return 0
 }
 
 # -----------------------------------------------------------------------------
@@ -81,10 +79,11 @@ help() {
     echo
     echo "Usage: $0 [OPTIONS]"
     echo
-    echo "    -d, --dev <ref>              [Optional] Set the development stage you want to build, example rc1 or beta1, not used by default."
-    echo "    -f, --filebeat-module <ref>  [Optional] Set Filebeat module version. By default ${FILEBEAT_MODULE_VERSION}."
-    echo "    -r, --revision <rev>         [Optional] Package revision. By default ${WAZUH_TAG_REVISION}"
-    echo "    -v, --version <ver>          [Optional] Set the Wazuh version should be builded. By default, ${WAZUH_IMAGE_VERSION}."
+    echo "    -a, --all                    Build all the images."
+    echo "    -wus, --wazuh-unraid-setup   Build the Wazuh Unraid setup image."
+    echo "    -wm, --wazuh-manager         Build the Wazuh Manager image."
+    echo "    -wi, --wazuh-indexer         Build the Wazuh Indexer image."
+    echo "    -wd, --wazuh-dashboard       Build the Wazuh Dashboard image."
     echo "    -h, --help                   Show this help."
     echo
     exit $1
@@ -99,34 +98,47 @@ main() {
         "-h"|"--help")
             help 0
             ;;
-        "-d"|"--dev")
+        "-a"|"--all")
             if [ -n "${2}" ]; then
-                WAZUH_DEV_STAGE="${2}"
-                shift 2
+                build || clean 1
+                docker-compose -f build-docker-images/build-images.yml --env-file .env build
+                return 0
             else
                 help 1
             fi
             ;;
-        "-f"|"--filebeat-module")
+        "-wus"|"--wazuh-unraid-setup")
             if [ -n "${2}" ]; then
-                FILEBEAT_MODULE_VERSION="${2}"
-                shift 2
+                build || clean 1
+                docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
+                return 0
             else
                 help 1
             fi
             ;;
-        "-r"|"--revision")
+        "-wm"|"--wazuh-manager")
             if [ -n "${2}" ]; then
-                WAZUH_TAG_REVISION="${2}"
-                shift 2
+                build || clean 1
+                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-manager
+                return 0
             else
                 help 1
             fi
             ;;
-        "-v"|"--version")
-            if [ -n "$2" ]; then
-                WAZUH_IMAGE_VERSION="$2"
-                shift 2
+        "-wi"|"--wazuh-indexer")
+            if [ -n "${2}" ]; then
+                build || clean 1
+                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-indexer
+                return 0
+            else
+                help 1
+            fi
+            ;;
+        "-wd"|"--wazuh-dashboard")
+            if [ -n "${2}" ]; then
+                build || clean 1
+                docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-dashboard
+                return 0
             else
                 help 1
             fi
@@ -136,9 +148,8 @@ main() {
         esac
     done
 
-    build || clean 1
-
     clean 0
 }
 
+export DOCKER_BUILDKIT=1
 main "$@"
