@@ -1,164 +1,208 @@
 #!/bin/bash
 # Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 
-if [ "${INSTALL_AGENT}" = "true" ]; then
-    echo "Building the Agent for Unraid"
-    curl -Ls https://github.com/wazuh/wazuh/archive/v4.8.0.tar.gz | tar zx
-    rm /wazuh-4.8.0/etc/preloaded-vars.conf
-    cp /config/preloaded-vars.conf /wazuh-4.8.0/etc/preloaded-vars.conf
-    ./wazuh-4.8.0/install.sh
-    chmod g+w "${AGENT_DIRECTORY}/queue/rids/"
-fi
+install_java () {
+    echo "Installing Java"
+    ./jdk-17.0.11+9/bin/java -version
+}
 
-if [ "${INSTALL_SCRIPTS}" = "true" ]; then
-    echo "Creating the User Scripts"
-    mkdir -p /scripts/wazuh_prep
-    mkdir -p /scripts/wazuh_agent_start
-    mkdir -p /scripts/wazuh_agent_stop
 
-    echo "- wazuh_prep"
-    cat <<-EOF >/scripts/wazuh_prep/name
-		wazuh_prep
-	EOF
+main () {
+    install_java
+}
 
-    cat <<-EOF >/scripts/wazuh_prep/script
-		#!/bin/bash
-		sysctl -w vm.max_map_count=262144
+main
 
-        /usr/sbin/useradd -u 999 wazuh
+# if [ "${INSTALL_AGENT}" = "true" ]; then
+#     echo "Building the Agent for Unraid"
+#     curl -Ls https://github.com/wazuh/wazuh/archive/v4.8.0.tar.gz | tar zx
+#     rm /wazuh-4.8.0/etc/preloaded-vars.conf
+#     cp /config/preloaded-vars.conf /wazuh-4.8.0/etc/preloaded-vars.conf
+#     ./wazuh-4.8.0/install.sh
+#     chmod g+w -R /wazuh-4.8.0/queue/rids/
+# fi
 
-		/usr/sbin/groupmod -g 999 wazuh
-	EOF
+# if [ "${INSTALL_SCRIPTS}" = "true" ]; then
+#     echo "Creating the User Scripts"
+#     mkdir -p /scripts/wazuh_prep
+#     mkdir -p /scripts/wazuh_agent_start
+#     mkdir -p /scripts/wazuh_agent_stop
 
-    echo "- wazuh_agent_start"
-    cat <<-EOF >/scripts/wazuh_agent_start/name
-		wazuh_agent_start
-	EOF
+#     echo "- wazuh_prep"
+#     cat <<-EOF >/scripts/wazuh_prep/name
+# 		wazuh_prep
+# 	EOF
 
-    cat <<-EOF >/scripts/wazuh_agent_start/script
-		#!/bin/bash
+#     cat <<-EOF >/scripts/wazuh_prep/script
+# 		#!/bin/bash
+# 		sysctl -w vm.max_map_count=262144
 
-		${AGENT_DIRECTORY}/bin/wazuh-control start
-	EOF
+#         /usr/sbin/useradd -u 999 wazuh
 
-    echo "- wazuh_agent_stop"
-    cat <<-EOF >/scripts/wazuh_agent_stop/name
-		wazuh_agent_stop
-	EOF
+# 		/usr/sbin/groupmod -g 999 wazuh
+# 	EOF
 
-    cat <<-EOF >/scripts/wazuh_agent_stop/script
-		#!/bin/bash
-		${AGENT_DIRECTORY}/bin/wazuh-control stop
-	EOF
-fi
+#     echo "- wazuh_agent_start"
+#     cat <<-EOF >/scripts/wazuh_agent_start/name
+# 		wazuh_agent_start
+# 	EOF
 
-mkdir -p /wazuh-indexer/certs
-mkdir -p /wazuh-indexer/wazuh-indexer-data
-mkdir -p /wazuh-manager/certs
-mkdir -p /wazuh-manager/ossec_logs
-mkdir -p /wazuh-manager/ossec_queue
-mkdir -p /wazuh-dashboard/certs
+#     cat <<-EOF >/scripts/wazuh_agent_start/script
+# 		#!/bin/bash
 
-if [ "${PREP_GRAYLOG}" = "true" ]; then
-    mkdir -p /graylog/certs
-    mkdir -p /graylog/journal
-    chown 1100:1100 -R /graylog
-fi
+# 		${AGENT_DIRECTORY}/bin/wazuh-control start
+# 	EOF
 
-if [ "${INSTALL_CONFS}" = "true" ]; then
+#     echo "- wazuh_agent_stop"
+#     cat <<-EOF >/scripts/wazuh_agent_stop/name
+# 		wazuh_agent_stop
+# 	EOF
 
-    echo "Copying configuration files"
+#     cat <<-EOF >/scripts/wazuh_agent_stop/script
+# 		#!/bin/bash
+# 		${AGENT_DIRECTORY}/bin/wazuh-control stop
+# 	EOF
+# fi
 
-    echo "- indexer"
-    cp /config/wazuh.indexer.yml /wazuh-indexer/opensearch.yml
-    cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
-    chown 1000:1000 -R /wazuh-indexer
+# mkdir -p /wazuh-indexer/certs
+# mkdir -p /wazuh-indexer/wazuh-indexer-data
+# mkdir -p /wazuh-manager/certs
+# mkdir -p /wazuh-manager/ossec_logs
+# mkdir -p /wazuh-manager/ossec_queue
+# chmod g+w -R /wazuh-manager/ossec_queue
+# mkdir -p /wazuh-dashboard/certs
 
-    echo "- manager"
-    cp /config/wazuh_manager.conf /wazuh-manager/ossec.conf
-    cp /config/preloaded-vars.conf /wazuh-manager/unraid-preloaded-vars.conf
-    chown 999:999 -R /wazuh-manager
+# if [ "${PREP_GRAYLOG}" = "true" ]; then
+#     mkdir -p /graylog/certs
+#     mkdir -p /graylog/journal
+#     chown 1100:1100 -R /graylog
+# fi
 
-    echo "- dashboard"
-    cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
-    cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
-    chown 1000:1000 -R /wazuh-dashboard
-fi
+# if [ "${INSTALL_CONFS}" = "true" ]; then
 
-if [ "${INSTALL_CERTS}" = "true" ]; then
-    cp /config/certs.yml /config.yml
-    rm -rf /wazuh-certificates
-    rm -rf /wazuh-indexer/certs/*
-    rm -rf /wazuh-manager/certs/*
-    rm -rf /wazuh-dashboard/certs/*
+#     echo "Copying configuration files"
 
-    echo "Downloading Cert Gen Tool"
+#     echo "- indexer"
+#     cp /config/wazuh.indexer.yml /wazuh-indexer/opensearch.yml
+#     cp /config/internal_users.yml /wazuh-indexer/internal_users.yml
+#     chown 1000:1000 -R /wazuh-indexer
 
-    ## Variables
-    CERT_TOOL=wazuh-certs-tool.sh
-    PASSWORD_TOOL=wazuh-passwords-tool.sh
-    PACKAGES_URL=https://packages.wazuh.com/4.8/
-    PACKAGES_DEV_URL=https://packages-dev.wazuh.com/4.8/
+#     echo "- manager"
+#     cp /config/wazuh_manager.conf /wazuh-manager/ossec.conf
+#     cp /config/preloaded-vars.conf /wazuh-manager/unraid-preloaded-vars.conf
+#     chown 999:999 -R /wazuh-manager
 
-    ## Check if the cert tool exists in S3 buckets
-    CERT_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
-    CERT_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
+#     echo "- dashboard"
+#     cp /config/opensearch_dashboards.yml /wazuh-dashboard/opensearch_dashboards.yml
+#     cp /config/wazuh.yml /wazuh-dashboard/wazuh.yml
+#     chown 1000:1000 -R /wazuh-dashboard
 
-    ## If cert tool exists in some bucket, download it, if not exit 1
-    if [ "$CERT_TOOL_PACKAGES" = "200" ]; then
-        curl -o $CERT_TOOL $PACKAGES_URL$CERT_TOOL -s
-        echo "Download complete."
-    elif [ "$CERT_TOOL_PACKAGES_DEV" = "200" ]; then
-        curl -o $CERT_TOOL $PACKAGES_DEV_URL$CERT_TOOL -s
-        echo "Download complete."
-    else
-        echo "The tool to create the certificates does not exist on the server."
-        echo "ERROR: certificates were not created"
-        exit 1
-    fi
+#     echo "Modifying configuration files"
 
-    chmod 700 /$CERT_TOOL
+#     sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml
+#     sed -i "s,ip: wazuh.indexer,ip: ${INDEXER_IP},1" /config/certs.yml
+#     sed -i "s,name: wazuh.manager,name: ${MANAGER_NAME},1" /config/certs.yml
+#     sed -i "s,ip: wazuh.manager,ip: ${MANAGER_IP},1" /config/certs.yml
+#     sed -i "s,name: wazuh.dashboard,name: ${DASHBOARD_NAME},1" /config/certs.yml
+#     sed -i "s,ip: wazuh.dashboard,ip: ${DASHBOARD_IP},1" /config/certs.yml
 
-    echo "Creating Cluster certificates"
+#     echo "- wazuh.indexer.yml" # Indexer
+#     sed -i "s,network.host:.*,network.host: \"${INDEXER_IP}\",1" /config/wazuh.indexer.yml
+#     sed -i "s,node.name:.*,node.name: \"${INDEXER_NAME}\",1" /config/wazuh.indexer.yml
 
-    ## Execute cert tool and parsin cert.yml to set UID permissions
-    source /$CERT_TOOL -A
-    nodes_server=$(cert_parseYaml /config.yml | grep -E "nodes[_]+server[_]+[0-9]+=" | sed -e 's/nodes__server__[0-9]=//' | sed 's/"//g')
-    node_names=($nodes_server)
+#     echo "- wazuh.yml" # Dashboard
+#     sed -i "s,url: \"https://wazuh.manager\",url: \"https://${MANAGER_IP}\",1" /config/wazuh.yml
+#     sed -i "s,username:.*,username: ${API_USERNAME},g" /config/wazuh.yml
+#     sed -i "s,password:.*,password: \"${API_PASSWORD}\",g" /config/wazuh.yml
+    
+#     echo "- opensearch_dashboards.conf" # Dashboard
+#     sed -i "s,server.host:.*,server.host: ${DASHBOARD_IP},1" /config/opensearch_dashboards.yml
+#     sed -i "s,opensearch.hosts:.*,opensearch.hosts: https://${INDEXER_IP}:9200,1" /config/opensearch_dashboards.yml
+    
+#     echo "- wazuh_manager.conf" # Manager
+#     sed -i "s,<host>https://wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf
+#     sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf
+    
+#     echo "- preloaded-vars.conf" # Agent
+#     sed -i "s,USER_AGENT_SERVER_IP=.*,USER_AGENT_SERVER_IP=\"${MANAGER_IP}\",g" /config/preloaded-vars.conf
 
-    echo "Moving created certificates to the destination directories"
+# fi
 
-    echo "- indexer"
-    cp /wazuh-certificates/root-ca.key /wazuh-indexer/certs/root-ca.key
-    cp /wazuh-certificates/root-ca.pem /wazuh-indexer/certs/root-ca.pem
-    cp /wazuh-certificates/wazuh-indexer-key.pem /wazuh-indexer/certs/wazuh.indexer.key
-    cp /wazuh-certificates/wazuh-indexer.pem /wazuh-indexer/certs/wazuh.indexer.pem
-    cp /wazuh-certificates/admin.pem /wazuh-indexer/certs/admin.pem
-    cp /wazuh-certificates/admin-key.pem /wazuh-indexer/certs/admin-key.pem
-    chmod -R 500 /wazuh-indexer/certs
-    chmod -R 400 /wazuh-indexer/certs/*
-    chown 1000:1000 -R /wazuh-indexer/certs
+# if [ "${INSTALL_CERTS}" = "true" ]; then
+#     cp /config/certs.yml /config.yml
+#     rm -rf /wazuh-certificates/*
+#     rm -rf /wazuh-indexer/certs/*
+#     rm -rf /wazuh-manager/certs/*
+#     rm -rf /wazuh-dashboard/certs/*
 
-    echo "- dashboard"
-    cp /wazuh-certificates/root-ca.pem /wazuh-dashboard/certs/root-ca.pem
-    cp /wazuh-certificates/wazuh-dashboard.pem /wazuh-dashboard/certs/wazuh-dashboard.pem
-    cp /wazuh-certificates/wazuh-dashboard-key.pem /wazuh-dashboard/certs/wazuh-dashboard-key.pem
-    chmod -R 500 /wazuh-dashboard/certs
-    chmod -R 400 /wazuh-dashboard/certs/*
-    chown 1000:1000 -R /wazuh-dashboard/certs
+#     echo "Downloading Cert Gen Tool"
 
-    echo "- manager"
-    cp /wazuh-certificates/root-ca.pem /wazuh-manager/certs/root-ca.pem
-    cp /wazuh-certificates/wazuh-manager.pem /wazuh-manager/certs/filebeat.pem
-    cp /wazuh-certificates/wazuh-manager-key.pem /wazuh-manager/certs/filebeat.key
-    chmod -R 500 /wazuh-manager/certs
-    chmod -R 400 /wazuh-manager/certs/*
-    chown 999:999 -R /wazuh-manager/certs
+#     ## Variables
+#     CERT_TOOL=wazuh-certs-tool.sh
+#     PASSWORD_TOOL=wazuh-passwords-tool.sh
+#     PACKAGES_URL=https://packages.wazuh.com/4.8/
+#     PACKAGES_DEV_URL=https://packages-dev.wazuh.com/4.8/
 
-    if [ "${PREP_GRAYLOG}" = "true" ]; then
-        echo "- graylog"
-        cp /wazuh-certificates/root-ca.pem /graylog/certs/wazuh-root-ca.pem
-    fi
-fi
+#     ## Check if the cert tool exists in S3 buckets
+#     CERT_TOOL_PACKAGES=$(curl --silent -I $PACKAGES_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
+#     CERT_TOOL_PACKAGES_DEV=$(curl --silent -I $PACKAGES_DEV_URL$CERT_TOOL | grep -E "^HTTP" | awk '{print $2}')
 
-echo "wazuh-unraid-setup: Finished!"
+#     ## If cert tool exists in some bucket, download it, if not exit 1
+#     if [ "$CERT_TOOL_PACKAGES" = "200" ]; then
+#         curl -o $CERT_TOOL $PACKAGES_URL$CERT_TOOL -s
+#         echo "Download complete."
+#     elif [ "$CERT_TOOL_PACKAGES_DEV" = "200" ]; then
+#         curl -o $CERT_TOOL $PACKAGES_DEV_URL$CERT_TOOL -s
+#         echo "Download complete."
+#     else
+#         echo "The tool to create the certificates does not exist on the server."
+#         echo "ERROR: certificates were not created"
+#         exit 1
+#     fi
+
+#     chmod 700 /$CERT_TOOL
+
+#     echo "Creating Cluster certificates"
+
+#     ## Execute cert tool and parsin cert.yml to set UID permissions
+#     source /$CERT_TOOL -A
+#     nodes_server=$(cert_parseYaml /config.yml | grep -E "nodes[_]+server[_]+[0-9]+=" | sed -e 's/nodes__server__[0-9]=//' | sed 's/"//g')
+#     node_names=($nodes_server)
+
+#     echo "Moving created certificates to the destination directories"
+
+#     echo "- indexer"
+#     cp /wazuh-certificates/root-ca.key /wazuh-indexer/certs/root-ca.key
+#     cp /wazuh-certificates/root-ca.pem /wazuh-indexer/certs/root-ca.pem
+#     cp /wazuh-certificates/wazuh-indexer-key.pem /wazuh-indexer/certs/wazuh.indexer.key
+#     cp /wazuh-certificates/wazuh-indexer.pem /wazuh-indexer/certs/wazuh.indexer.pem
+#     cp /wazuh-certificates/admin.pem /wazuh-indexer/certs/admin.pem
+#     cp /wazuh-certificates/admin-key.pem /wazuh-indexer/certs/admin-key.pem
+#     chmod -R 500 /wazuh-indexer/certs
+#     chmod -R 400 /wazuh-indexer/certs/*
+#     chown 1000:1000 -R /wazuh-indexer/certs
+
+#     echo "- dashboard"
+#     cp /wazuh-certificates/root-ca.pem /wazuh-dashboard/certs/root-ca.pem
+#     cp /wazuh-certificates/wazuh-dashboard.pem /wazuh-dashboard/certs/wazuh-dashboard.pem
+#     cp /wazuh-certificates/wazuh-dashboard-key.pem /wazuh-dashboard/certs/wazuh-dashboard-key.pem
+#     chmod -R 500 /wazuh-dashboard/certs
+#     chmod -R 400 /wazuh-dashboard/certs/*
+#     chown 1000:1000 -R /wazuh-dashboard/certs
+
+#     echo "- manager"
+#     cp /wazuh-certificates/root-ca.pem /wazuh-manager/certs/root-ca.pem
+#     cp /wazuh-certificates/wazuh-manager.pem /wazuh-manager/certs/filebeat.pem
+#     cp /wazuh-certificates/wazuh-manager-key.pem /wazuh-manager/certs/filebeat.key
+#     chmod -R 500 /wazuh-manager/certs
+#     chmod -R 400 /wazuh-manager/certs/*
+#     chown 999:999 -R /wazuh-manager/certs
+
+#     if [ "${PREP_GRAYLOG}" = "true" ]; then
+#         echo "- graylog"
+#         cp /wazuh-certificates/root-ca.pem /graylog/certs/wazuh-root-ca.pem
+#         chown 1100:1100 /graylog/certs/wazuh-root-ca.pem
+#     fi
+# fi
+
+# echo "wazuh-unraid-setup: Finished!"
