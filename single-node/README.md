@@ -8,6 +8,8 @@ then the `wazuh-manager`, the `wazuh-indexer`, and finally the `wazuh-dashboard`
 This is not intended for production or persistant use. This is used to
 test the containers locally prior to deploying them on an Unraid server.
 
+Run these from the root of the repository.
+
 -   Increase max_map_count on your host (Linux). This command must be run with root permissions:
 
 ```bash
