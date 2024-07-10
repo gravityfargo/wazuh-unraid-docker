@@ -1,24 +1,39 @@
-# Deploy Wazuh Docker in single node configuration
+# Deploy a Single-Node Unraid Wazuh Environment
 
-This deployment is defined in the `docker-compose.yml` file with one Wazuh manager containers, one Wazuh indexer containers, and one Wazuh dashboard container. It can be deployed by following these steps: 
+This deployment is defined in the `docker-compose.yml` file.
 
-1) Increase max_map_count on your host (Linux). This command must be run with root permissions:
-```
-$ sysctl -w vm.max_map_count=262144
-```
-2) Run the certificate creation script:
-```
-$ docker-compose -f generate-indexer-certs.yml run --rm generator
-```
-3) Start the environment with docker-compose:
+There are commands to run the `wazuh-unraid-setup` container,
+then the `wazuh-manager`, the `wazuh-indexer`, and finally the `wazuh-dashboard`.
 
-- In the foregroud:
-```
-$ docker-compose up
-```
-- In the background:
-```
-$ docker-compose up -d
+This is not intended for production or persistant use. This is used to
+test the containers locally prior to deploying them on an Unraid server.
+
+-   Increase max_map_count on your host (Linux). This command must be run with root permissions:
+
+```bash
+sysctl -w vm.max_map_count=262144
 ```
 
-The environment takes about 1 minute to get up (depending on your Docker host) for the first time since Wazuh Indexer must be started for the first time and the indexes and index patterns must be generated.
+-   wazuh-unraid-setup
+
+```bash
+docker-compose -f docker-compose/unraid-docker-compose.yml run --rm wazuh-unraid-setup
+```
+
+-   wazuh-manager
+
+```bash
+docker-compose -f docker-compose/unraid-docker-compose.yml run --rm wazuh-manager
+```
+
+-   wazuh-indexer
+
+```bash
+docker-compose -f docker-compose/unraid-docker-compose.yml run --rm wazuh-indexer
+```
+
+-   wazuh-dashboard
+
+```bash
+docker-compose -f docker-compose/unraid-docker-compose.yml run --rm wazuh-dashboard
+```
