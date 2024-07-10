@@ -24,7 +24,9 @@ if [ "${INSTALL_SCRIPTS}" = "true" ]; then
     cat <<-EOF >/scripts/wazuh_prep/script
 		#!/bin/bash
 		sysctl -w vm.max_map_count=262144
+
         /usr/sbin/useradd -u 999 wazuh
+
 		/usr/sbin/groupmod -g 999 wazuh
 	EOF
 
@@ -36,7 +38,7 @@ if [ "${INSTALL_SCRIPTS}" = "true" ]; then
     cat <<-EOF >/scripts/wazuh_agent_start/script
 		#!/bin/bash
 
-		${AGENT_DIRETORY}/bin/wazuh-control start
+		${AGENT_DIRECTORY}/bin/wazuh-control start
 	EOF
 
     echo "- wazuh_agent_stop"
@@ -46,7 +48,7 @@ if [ "${INSTALL_SCRIPTS}" = "true" ]; then
 
     cat <<-EOF >/scripts/wazuh_agent_stop/script
 		#!/bin/bash
-		${AGENT_DIRETORY}/bin/wazuh-control stop
+		${AGENT_DIRECTORY}/bin/wazuh-control stop
 	EOF
 fi
 

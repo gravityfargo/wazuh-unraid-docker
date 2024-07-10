@@ -34,7 +34,7 @@
   <Config Name="DASHBOARD_IP" Target="DASHBOARD_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">10.10.10.102</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">wazuh-wui</Config>
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">MyS3cr37P450r.*-"</Config>
-  <Config Name="AGENT_DIRECTORY" Target="AGENT_DIRECTORY" Default="" Mode="rw" Description="" Type="advanced" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-agent</Config>
+  <Config Name="AGENT_DIRECTORY" Target="AGENT_DIRECTORY" Default="" Mode="rw" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-agent</Config>
   <Config Name="AGENT_DIRECTORY" Target="/agent" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-agent</Config>
   <Config Name="Manager Path" Target="/wazuh-manager" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager</Config>
   <Config Name="Indexer Path" Target="/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer</Config>
