@@ -11,7 +11,10 @@ ENV MANAGER_NAME="wazuh-manager" \
     API_PASSWORD="MyS3cr37P450r.*-" \
     INSTALL_AGENT="true" \
     INSTALL_SCRIPTS="true" \
-    AGENT_DIRETORY="/mnt/user/appdata/wazuh-agent"
+    AGENT_DIRETORY="/mnt/user/appdata/wazuh-agent" \
+    INSTALL_CERTS="true" \
+    INSTALL_CONFS="true" \
+    PREP_GRAYLOG="true"
 
 WORKDIR /
 COPY config/entrypoint.sh /
