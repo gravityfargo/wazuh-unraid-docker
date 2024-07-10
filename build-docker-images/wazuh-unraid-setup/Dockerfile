@@ -1,12 +1,35 @@
 # Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
-FROM ubuntu:focal
+# Modifications by GitHub user gravityfargo, 2024
+FROM andy5995/slackware-build-essential:15.0
 
-RUN apt-get update && apt-get install openssl curl -y
+ENV MANAGER_NAME="wazuh-manager" \
+    MANAGER_IP="10.10.10.101" \
+    INDEXER_NAME="wazuh-indexer" \
+    INDEXER_IP="10.10.10.100" \
+    DASHBOARD_NAME="wazuh-dashboard" \
+    DASHBOARD_IP="10.10.10.102" \
+    API_USERNAME="wazuhapi" \
+    API_PASSWORD="MyS3cr37P450r.*-" \
+    DASHBOARD_USERNAME="wazuhdash" \
+    DASHBOARD_PASSWORD="MyS3cr37P450r.*-" \
+    GRAYLOG_USERNAME="wazuhgraylog" \
+    GRAYLOG_PASSWORD="MyS3cr37P450r.*-" \
+    INSTALL_AGENT="true" \
+    INSTALL_SCRIPTS="true" \
+    AGENT_DIRECTORY="/mnt/user/appdata/wazuh/wazuh-agent" \
+    INSTALL_CERTS="true" \
+    INSTALL_CONFS="true" \
+    PREP_GRAYLOG="true"
 
 WORKDIR /
 
-COPY config/entrypoint.sh /
+RUN wget -O OpenJDK17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz \
+    && tar -xzf OpenJDK17.tar.gz \
+    && rm OpenJDK17.tar.gz
 
+COPY config/* /config/
+
+COPY config/entrypoint.sh /
 RUN chmod 700 /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
