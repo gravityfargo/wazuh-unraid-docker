@@ -79,12 +79,14 @@ help() {
     echo
     echo "Usage: $0 [OPTIONS]"
     echo
-    echo "    -a, --all                    Build all the images."
-    echo "    -wus, --wazuh-unraid-setup   Build the Wazuh Unraid setup image."
-    echo "    -wm, --wazuh-manager         Build the Wazuh Manager image."
-    echo "    -wi, --wazuh-indexer         Build the Wazuh Indexer image."
-    echo "    -wd, --wazuh-dashboard       Build the Wazuh Dashboard image."
-    echo "    -h, --help                   Show this help."
+    echo "  -a,   --all                    Build all the images."
+    echo "  -bus, --wazuh-unraid-setup     Build the Wazuh Unraid setup image."
+    echo "  -pus, --push-unraid-setup      Push the Wazuh Unraid setup image."
+    echo "  -bm,  --wazuh-manager          Build the Wazuh Manager image."
+    echo "  -pm,  --push-manager           Push the Wazuh Manager image."
+    echo "  -bi,  --wazuh-indexer          Build the Wazuh Indexer image."
+    echo "  -bd,  --wazuh-dashboard        Build the Wazuh Dashboard image."
+    echo "  -h,   --help                   Show this help."
     echo
     exit $1
 }
@@ -107,7 +109,7 @@ main() {
                 help 1
             fi
             ;;
-        "-wus"|"--wazuh-unraid-setup")
+        "-bus"|"--build-unraid-setup")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
@@ -116,7 +118,15 @@ main() {
                 help 1
             fi
             ;;
-        "-wm"|"--wazuh-manager")
+        "-pus"|"--push-unraid-setup")
+            if [ -n "${2}" ]; then
+                docker push gravityfargo/wazuh-unraid-setup:4.8.0
+                return 0
+            else
+                help 1
+            fi
+            ;;
+        "-bm"|"--build-manager")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-manager
@@ -125,7 +135,15 @@ main() {
                 help 1
             fi
             ;;
-        "-wi"|"--wazuh-indexer")
+        "-pm"|"--push-manager")
+            if [ -n "${2}" ]; then
+                docker push gravityfargo/wazuh-manager:4.8.0
+                return 0
+            else
+                help 1
+            fi
+            ;;
+        "-bi"|"--build-indexer")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-indexer
@@ -134,7 +152,7 @@ main() {
                 help 1
             fi
             ;;
-        "-wd"|"--wazuh-dashboard")
+        "-bd"|"--build-dashboard")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-dashboard
