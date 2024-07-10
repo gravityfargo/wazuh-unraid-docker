@@ -7,8 +7,12 @@ ENV MANAGER_NAME="wazuh-manager" \
     INDEXER_IP="10.10.10.100" \
     DASHBOARD_NAME="wazuh-dashboard" \
     DASHBOARD_IP="10.10.10.102" \
-    API_USERNAME="wazuh-wui" \
+    API_USERNAME="wazuhapi" \
     API_PASSWORD="MyS3cr37P450r.*-" \
+    DASHBOARD_USERNAME="wazuhdash" \
+    DASHBOARD_PASSWORD="MyS3cr37P450r.*-" \
+    GRAYLOG_USERNAME="wazuhgraylog" \
+    GRAYLOG_PASSWORD="MyS3cr37P450r.*-" \
     INSTALL_AGENT="true" \
     INSTALL_SCRIPTS="true" \
     AGENT_DIRECTORY="/mnt/user/appdata/wazuh/wazuh-agent" \
@@ -17,31 +21,14 @@ ENV MANAGER_NAME="wazuh-manager" \
     PREP_GRAYLOG="true"
 
 WORKDIR /
-COPY config/entrypoint.sh /
-RUN chmod 700 /entrypoint.sh
+
+RUN wget -O OpenJDK17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz \
+    && tar -xzf OpenJDK17.tar.gz \
+    && rm OpenJDK17.tar.gz
+
 COPY config/* /config/
 
-# Apparently docker doesnt like EOT when including variables.
-RUN sed -i "s,name: wazuh.indexer,name: ${INDEXER_NAME},1" /config/certs.yml  && \
-    sed -i "s,ip: wazuh.indexer,ip: ${INDEXER_IP},1" /config/certs.yml && \
-    sed -i "s,name: wazuh.manager,name: ${MANAGER_NAME},1" /config/certs.yml && \
-    sed -i "s,ip: wazuh.manager,ip: ${MANAGER_IP},1" /config/certs.yml && \
-    sed -i "s,name: wazuh.dashboard,name: ${DASHBOARD_NAME},1" /config/certs.yml && \
-    sed -i "s,ip: wazuh.dashboard,ip: ${DASHBOARD_IP},1" /config/certs.yml && \
-    # 
-    sed -i "s,network.host:.*,network.host: \"${INDEXER_IP}\",1" /config/wazuh.indexer.yml && \
-    sed -i "s,node.name:.*,node.name: \"${INDEXER_NAME}\",1" /config/wazuh.indexer.yml && \
-    #
-    sed -i "s,url: \"https://wazuh.manager\",url: \"https://${MANAGER_IP}\",1" /config/wazuh.yml && \
-    sed -i "s,username:.*,username: \"${API_USERNAME}\",g" /config/wazuh.yml && \
-    sed -i "s,password:.*,password: \"${API_PASSWORD}\",g" /config/wazuh.yml && \
-    #
-    sed -i "s,server.host:.*,server.host: ${DASHBOARD_IP},1" /config/opensearch_dashboards.yml && \
-    sed -i "s,opensearch.hosts:.*,opensearch.hosts: https://${INDEXER_IP}:9200,1" /config/opensearch_dashboards.yml && \
-    #
-    sed -i "s,<host>https://wazuh.indexer:9200</host>,<host>https://${INDEXER_IP}:9200</host>,1" /config/wazuh_manager.conf && \
-    sed -i "s,<node>wazuh.manager</node>,<node>${MANAGER_IP}</node>,1" /config/wazuh_manager.conf && \
-    # 
-    sed -i "s,USER_AGENT_SERVER_IP=.*,USER_AGENT_SERVER_IP=\"${MANAGER_IP}\",g" /config/preloaded-vars.conf
-    
+COPY config/entrypoint.sh /
+RUN chmod 700 /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
