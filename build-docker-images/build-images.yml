@@ -1,7 +1,7 @@
 # Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 # Modifications by GitHub user gravityfargo, 2024
 services:
-  wazuh.manager:
+  wazuh-manager:
     build:
       context: wazuh-manager/
       args:
@@ -10,8 +10,6 @@ services:
         FILEBEAT_TEMPLATE_BRANCH: ${FILEBEAT_TEMPLATE_BRANCH}
         WAZUH_FILEBEAT_MODULE: ${WAZUH_FILEBEAT_MODULE}
     image: gravityfargo/wazuh-manager:${WAZUH_IMAGE_VERSION}
-    hostname: wazuh.manager
-    restart: always
     ports:
       - "1514:1514"
       - "1515:1515"
@@ -35,15 +33,13 @@ services:
       - filebeat_etc:/etc/filebeat
       - filebeat_var:/var/lib/filebeat
 
-  wazuh.indexer:
+  wazuh-indexer:
     build:
       context: wazuh-indexer/
       args:
         WAZUH_VERSION: ${WAZUH_VERSION}
         WAZUH_TAG_REVISION: ${WAZUH_TAG_REVISION}
     image: wazuh/wazuh-indexer:${WAZUH_IMAGE_VERSION}
-    hostname: wazuh.indexer
-    restart: always
     ports:
       - "9200:9200"
     environment:
@@ -56,7 +52,7 @@ services:
         soft: 65536
         hard: 65536
 
-  wazuh.dashboard:
+  wazuh-dashboard:
     build:
       context: wazuh-dashboard/
       args:
@@ -64,8 +60,6 @@ services:
         WAZUH_TAG_REVISION: ${WAZUH_TAG_REVISION}
         WAZUH_UI_REVISION: ${WAZUH_UI_REVISION}
     image: wazuh/wazuh-dashboard:${WAZUH_IMAGE_VERSION}
-    hostname: wazuh.dashboard
-    restart: always
     ports:
       - 443:443
     environment:
@@ -74,10 +68,7 @@ services:
       - SERVER_SSL_ENABLED=false
       - WAZUH_API_URL=https://wazuh.manager
     depends_on:
-      - wazuh.indexer
-    links:
-      - wazuh.indexer:wazuh.indexer
-      - wazuh.manager:wazuh.manager
+      - wazuh-indexer
 
 volumes:
   wazuh_api_configuration:
