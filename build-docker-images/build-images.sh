@@ -34,7 +34,6 @@ ctrl_c() {
 
 # -----------------------------------------------------------------------------
 
-
 build() {
 
     WAZUH_VERSION="$(echo $WAZUH_IMAGE_VERSION | sed -e 's/\.//g')"
@@ -42,7 +41,7 @@ build() {
     WAZUH_FILEBEAT_MODULE="wazuh-filebeat-${FILEBEAT_MODULE_VERSION}.tar.gz"
     WAZUH_UI_REVISION="${WAZUH_TAG_REVISION}"
 
-    if  [ "${WAZUH_DEV_STAGE}" ];then
+    if [ "${WAZUH_DEV_STAGE}" ]; then
         FILEBEAT_TEMPLATE_BRANCH="v${FILEBEAT_TEMPLATE_BRANCH}-${WAZUH_DEV_STAGE,,}"
         if ! curl --output /dev/null --silent --head --fail "https://github.com/wazuh/wazuh/tree/${FILEBEAT_TEMPLATE_BRANCH}"; then
             echo "The indicated branch does not exist in the wazuh/wazuh repository: ${FILEBEAT_TEMPLATE_BRANCH}"
@@ -64,12 +63,12 @@ build() {
         fi
     fi
 
-    echo WAZUH_VERSION=$WAZUH_IMAGE_VERSION > .env
-    echo WAZUH_IMAGE_VERSION=$WAZUH_IMAGE_VERSION >> .env
-    echo WAZUH_TAG_REVISION=$WAZUH_TAG_REVISION >> .env
-    echo FILEBEAT_TEMPLATE_BRANCH=$FILEBEAT_TEMPLATE_BRANCH >> .env
-    echo WAZUH_FILEBEAT_MODULE=$WAZUH_FILEBEAT_MODULE >> .env
-    echo WAZUH_UI_REVISION=$WAZUH_UI_REVISION >> .env
+    echo WAZUH_VERSION=$WAZUH_IMAGE_VERSION >.env
+    echo WAZUH_IMAGE_VERSION=$WAZUH_IMAGE_VERSION >>.env
+    echo WAZUH_TAG_REVISION=$WAZUH_TAG_REVISION >>.env
+    echo FILEBEAT_TEMPLATE_BRANCH=$FILEBEAT_TEMPLATE_BRANCH >>.env
+    echo WAZUH_FILEBEAT_MODULE=$WAZUH_FILEBEAT_MODULE >>.env
+    echo WAZUH_UI_REVISION=$WAZUH_UI_REVISION >>.env
 
 }
 
@@ -94,13 +93,12 @@ help() {
 # -----------------------------------------------------------------------------
 
 main() {
-    while [ -n "${1}" ]
-    do
+    while [ -n "${1}" ]; do
         case "${1}" in
-        "-h"|"--help")
+        "-h" | "--help")
             help 0
             ;;
-        "-a"|"--all")
+        "-a" | "--all")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build
@@ -109,7 +107,7 @@ main() {
                 help 1
             fi
             ;;
-        "-bus"|"--build-unraid-setup")
+        "-bus" | "--build-unraid-setup")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 build-docker-images/wazuh-unraid-setup
@@ -118,7 +116,7 @@ main() {
                 help 1
             fi
             ;;
-        "-pus"|"--push-unraid-setup")
+        "-pus" | "--push-unraid-setup")
             if [ -n "${2}" ]; then
                 docker push gravityfargo/wazuh-unraid-setup:4.8.0
                 return 0
@@ -126,7 +124,7 @@ main() {
                 help 1
             fi
             ;;
-        "-bm"|"--build-manager")
+        "-bm" | "--build-manager")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-manager
@@ -135,7 +133,7 @@ main() {
                 help 1
             fi
             ;;
-        "-pm"|"--push-manager")
+        "-pm" | "--push-manager")
             if [ -n "${2}" ]; then
                 docker push gravityfargo/wazuh-manager:4.8.0
                 return 0
@@ -143,7 +141,7 @@ main() {
                 help 1
             fi
             ;;
-        "-bi"|"--build-indexer")
+        "-bi" | "--build-indexer")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-indexer
@@ -152,7 +150,7 @@ main() {
                 help 1
             fi
             ;;
-        "-bd"|"--build-dashboard")
+        "-bd" | "--build-dashboard")
             if [ -n "${2}" ]; then
                 build || clean 1
                 docker-compose -f build-docker-images/build-images.yml --env-file .env build wazuh-dashboard
@@ -163,6 +161,7 @@ main() {
             ;;
         *)
             help 1
+            ;;
         esac
     done
 
