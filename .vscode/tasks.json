@@ -24,6 +24,11 @@
             "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-unraid-setup.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-Wazuh-Unraid-Setup.xml"
         },
         {
+            "label": "wazuh-graylog.xml",
+            "type": "shell",
+            "command": "scp -i ~/.ssh/id_ed25519 ${workspaceFolder}/docker-templates/wazuh-graylog.xml  root@10.10.10.10:/boot/config/plugins/dockerMan/templates-user/my-Wazuh-Graylog.xml"
+        },
+        {
             "label": "build wazuh-unraid-setup",
             "type": "shell",
             "command": "docker build -t gravityfargo/wazuh-unraid-setup:4.8.0 ${workspaceFolder}/build-docker-images/wazuh-unraid-setup"
