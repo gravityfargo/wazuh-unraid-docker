@@ -7,7 +7,7 @@ ARG INSTALL_DIR=/usr/share/wazuh-dashboard
 ARG WAZUH_UI_REVISION
 
 # Update and install dependencies
-RUN yum install curl-minimal libcap xz tar openssl -y
+RUN yum install curl-minimal libcap xz tar openssl expect -y
 
 # Create Install dir
 RUN mkdir -p $INSTALL_DIR
