@@ -18,7 +18,7 @@ using the default values to get everything running then manually modify configur
 Ignoring everything else, you can just change IP addresses and run the containers as is.
 Changing the passwords is also a good idea, but I have not tested that with these templates.
 
-## Usage
+## Usage Wazuh
 
 -   A network bridge is requred. `br0` in my case.
 -   3 IP addresses are required. One for the manager, one for the indexer, and one for the
@@ -32,19 +32,32 @@ Changing the passwords is also a good idea, but I have not tested that with thes
 
 1. Install the `CA User Scripts` [plugin](https://forums.unraid.net/topic/48286-plugin-ca-user-scripts/)
 2. Install the `Wazuh-Unraid-Setup` container. It can be deleted after the setup is complete.
-   If you re-run it, it will recreate the certificates and overwrite the existing ones.
 3. Go to the "Userscripts" settings page.
 4. Set `wazuh_prep` to run "At First Array Start Only".
 5. Set `wazuh_agent_start` to run "At Startup of Array".
 6. Set `wazuh_agent_stop` to run "At Stopping of Array".
 7. Manually run the `wazuh_prep` script.
-8. Install the `Wazuh-Manager`, `Wazuh-Indexer`, and `Wazuh-Dashboard` containers. Install it, watch the logs for errors,
-   and only start the next container after the previous one has started successfully.
+8. Install the `Wazuh-Manager`, `Wazuh-Indexer`, and `Wazuh-Dashboard` containers. Install each, watch the logs for errors,
+   and only install the next container after the previous one has started successfully.
 9. Manually run the `wazuh_agent_start` script.
 
-### Bonus: Graylog
+### Usage Graylog
 
+1. Make sure to have used the `Wazuh-Unraid-Setup` container to create the necessary prerequisites.
+2. In the Wazuh Dashboard go to `Server Management` -> `Security` and create a new "graylog" user with the role "Administrator".
+2. Install the [MongoDB](https://forums.unraid.net/topic/54895-support-jasonbean-mongodb/) container.
+   The only configuration is the data directory and network.
+3. Install the `Wazuh-Graylog` container.
+4. exec into the graylog container and run the following commands
 
+```bash
+chown -R 1100:1100 /mnt/user/appdata/graylog/certs
+cp /opt/java/openjdk/lib/security/cacerts /certs/cacerts
+keytool -importcert -keystore /certs/cacerts -storepass changeit -alias root_ca -file /certs/wazuh-root-ca.pem
+```
+5. In the advanced section of the docker template, add the following to the `Extra Parameters` field.
+
+```bash
 
 ## Docker Containers
 
@@ -63,7 +76,7 @@ Changing the passwords is also a good idea, but I have not tested that with thes
 ## Directory Structure that is _Created_
 
 ```bash
-/mnt/user/appdata
+/mnt/user/appdata/wazuh
 ├── wazuh-dashboard
 │   ├── certs
 │   │   ├── wazuh-dashboard-key.pem
@@ -83,8 +96,11 @@ Changing the passwords is also a good idea, but I have not tested that with thes
 │   ├── internal_users.yml
 │   ├── opensearch.yml
 │   └── wazuh-indexer-data
-└── wazuh-manager
-    └── ossec.conf
+├── wazuh-manager
+│   └── ossec.conf
+└── graylog
+    └── certs
+        └── wazuh-root-ca.pem
 ```
 
 ## Development
@@ -117,8 +133,11 @@ Ancestor projects of Wazuh's are based on:
 
 Wazuh Docker Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 
-Thanks ChatGPT for making the icon for my container.
+[ChatGPT](https://chatgpt.com) made the icon for the `wazuh-unraid-setup` container.
 
+[socfortress](https://socfortress.medium.com/installing-the-new-wazuh-version-4-4-the-socfortress-way-ea3a8030d94b) for the Graylog Certificate instructions.
+
+[Adoptium](https://adoptium.net/) for the portable Java.
 ## Official Wazuh links
 
 -   [Wazuh website](http://wazuh.com)
