@@ -7,7 +7,7 @@ if [ "${INSTALL_AGENT}" = "true" ]; then
     rm /wazuh-4.8.0/etc/preloaded-vars.conf
     cp /config/preloaded-vars.conf /wazuh-4.8.0/etc/preloaded-vars.conf
     ./wazuh-4.8.0/install.sh
-    chmod g+w rids/
+    chmod g+w "${AGENT_DIRECTORY}/queue/rids/"
 fi
 
 if [ "${INSTALL_SCRIPTS}" = "true" ]; then
