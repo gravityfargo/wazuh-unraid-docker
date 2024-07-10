@@ -9,9 +9,7 @@
   <Privileged>false</Privileged>
   <Support/>
   <Project/>
-  <Overview>This container prepares the configuration, directories, and certificates for the Wazuh&#xD;
-        stack.</Overview>
-  <ReadMe>https://raw.githubusercontent.com/gravityfargo/wazuh-unraid-docker/master/README.md</ReadMe>
+  <Overview>This container prepares the configuration, directories, and certificates for the Wazuh stack.</Overview>
   <Category>Security:</Category>
   <WebUI/>
   <TemplateURL/>
@@ -19,15 +17,15 @@
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
-  <DateInstalled>1719964274</DateInstalled>
+  <DateInstalled>1720576078</DateInstalled>
   <DonateText/>
   <DonateLink/>
   <Requires/>
-  <Config Name="INSTALL_SCRIPTS" Target="INSTALL_SCRIPTS" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">true</Config>
-  <Config Name="Scripts Path" Target="/scripts" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/boot/config/plugins/user.scripts/scripts</Config>
-  <Config Name="INSTALL_AGENT" Target="INSTALL_AGENT" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">true</Config>
-  <Config Name="AGENT_DIRECTORY" Target="AGENT_DIRECTORY" Default="" Mode="rw" Description="" Type="Variable" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-agent</Config>
-  <Config Name="AGENT_DIRECTORY" Target="/agent" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-agent</Config>
+  <Config Name="INSTALL_SCRIPTS" Target="INSTALL_SCRIPTS" Default="true" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">true</Config>
+  <Config Name="INSTALL_AGENT" Target="INSTALL_AGENT" Default="true" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">false</Config>
+  <Config Name="INSTALL_CERTS" Target="INSTALL_CERTS" Default="true" Mode="" Description="If true, will overwrite any certificates if they exist." Type="Variable" Display="always" Required="true" Mask="false">true</Config>
+  <Config Name="INSTALL_CONFS" Target="INSTALL_CONFS" Default="true" Mode="" Description="If true, will overwrite any config files if they exist." Type="Variable" Display="always" Required="true" Mask="false">true</Config>
+  <Config Name="PREP_GRAYLOG" Target="PREP_GRAYLOG" Default="true" Mode="" Description="If true, directories and certificates for graylog will also be made. Make sure to set the graylog path in the advanced section." Type="Variable" Display="always" Required="true" Mask="false">true</Config>
   <Config Name="MANAGER_NAME" Target="MANAGER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">wazuh-manager</Config>
   <Config Name="MANAGER_IP" Target="MANAGER_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">10.10.10.101</Config>
   <Config Name="INDEXER_NAME" Target="INDEXER_NAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">wazuh-indexer</Config>
@@ -36,8 +34,11 @@
   <Config Name="DASHBOARD_IP" Target="DASHBOARD_IP" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">10.10.10.102</Config>
   <Config Name="API_USERNAME" Target="API_USERNAME" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">wazuh-wui</Config>
   <Config Name="API_PASSWORD" Target="API_PASSWORD" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">MyS3cr37P450r.*-"</Config>
-  <Config Name="Manager Path" Target="/wazuh-manager" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-manager</Config>
-  <Config Name="Indexer Path" Target="/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-indexer</Config>
-  <Config Name="Dashboard Path" Target="/wazuh-dashboard" Default="" Mode="rw" Description="" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh-dashboard</Config>
-
+  <Config Name="AGENT_DIRECTORY" Target="AGENT_DIRECTORY" Default="" Mode="rw" Description="" Type="advanced" Display="always" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-agent</Config>
+  <Config Name="AGENT_DIRECTORY" Target="/agent" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-agent</Config>
+  <Config Name="Manager Path" Target="/wazuh-manager" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-manager</Config>
+  <Config Name="Indexer Path" Target="/wazuh-indexer" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-indexer</Config>
+  <Config Name="Dashboard Path" Target="/wazuh-dashboard" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/wazuh/wazuh-dashboard</Config>
+  <Config Name="Graylog Path" Target="/graylog" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/wazuh/graylog</Config>
+  <Config Name="Scripts Path" Target="/scripts" Default="" Mode="rw" Description="" Type="Path" Display="advanced" Required="true" Mask="false">/boot/config/plugins/user.scripts/scripts</Config>
 </Container>
