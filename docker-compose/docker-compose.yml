@@ -1,4 +1,6 @@
 # Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
+# 
+# this is very outdated. I will update it soon.
 services:
     manager:
         image: gravityfargo/wazuh-manager:4.8.0
