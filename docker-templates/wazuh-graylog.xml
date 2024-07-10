@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>Wazuh-Graylog</Name>
+  <Repository>graylog/graylog:5.0</Repository>
+  <Registry>https://hub.docker.com/r/graylog/graylog/</Registry>
+  <Network>br0</Network>
+  <MyIP>10.10.10.20</MyIP>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support/>
+  <Project>https://www.graylog.org/</Project>
+  <Overview>&#xD;
+GRAYLOG_PASSWORD_SECRET: &#xD;
+pwgen -N 1 -s 96&#xD;
+&#xD;
+GRAYLOG_ROOT_PASSWORD_SHA2&#xD;
+echo -n "Enter Password: " &amp;amp;&amp;amp; head -1 &amp;lt; /dev/stdin | tr -d 'n' | sha256sum | cut -d " " -f1&#xD;
+</Overview>
+  <Category/>
+  <WebUI>http://[IP]:[PORT:9000]</WebUI>
+  <TemplateURL/>
+  <Icon/>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>1720574297</DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI/REST" Target="9000" Default="9000" Mode="tcp" Description="" Type="Port" Display="always" Required="false" Mask="false">9000</Config>
+  <Config Name="Syslog TCP" Target="1514" Default="1514" Mode="tcp" Description="" Type="Port" Display="always" Required="false" Mask="false">1514</Config>
+  <Config Name="Syslog UDP" Target="1514" Default="1514" Mode="udp" Description="" Type="Port" Display="always" Required="false" Mask="false">1514</Config>
+  <Config Name="GELF TCP" Target="12201" Default="12201" Mode="tcp" Description="" Type="Port" Display="always" Required="false" Mask="false">12201</Config>
+  <Config Name="GELF UDP" Target="12201" Default="12201" Mode="udp" Description="" Type="Port" Display="always" Required="false" Mask="false">12201</Config>
+  <Config Name="GRAYLOG_PASSWORD_SECRET" Target="GRAYLOG_PASSWORD_SECRET" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="true">IsE12fpSAYHSNJ3GEVjiI0Z8qI620YvwDSfbEo3FpCYAqutkzpu2HoemE0AZXeUwG5Zg7MozOWQVsq3U7jSNrCeJopis6ciU</Config>
+  <Config Name="GRAYLOG_ROOT_PASSWORD_SHA2" Target="GRAYLOG_ROOT_PASSWORD_SHA2" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="true">d143f626830222bcf7f2a217ee05579d1aee876e236eba5ca4a820e7f3f6a1db</Config>
+  <Config Name="GRAYLOG_HTTP_EXTERNAL_URI" Target="GRAYLOG_HTTP_EXTERNAL_URI" Default="" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">http://10.10.10.20:9000/</Config>
+  <Config Name="GRAYLOG_MONGODB_URI" Target="GRAYLOG_MONGODB_URI" Default="mongodb://unraid:27017/graylog" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">mongodb://10.10.10.10:27017/graylog</Config>
+  <Config Name="GRAYLOG_ELASTICSEARCH_HOSTS" Target="GRAYLOG_ELASTICSEARCH_HOSTS" Default="https://graylog:secretpassword@wazuh-indexer-ip:9200" Mode="" Description="" Type="Variable" Display="always" Required="true" Mask="false">https://graylog:secretpassword@10.10.10.100:9200</Config>
+  <Config Name="Certificates" Target="/certs" Default="/mnt/user/appdata/wazuh/graylog/certs" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh/graylog/certs</Config>
+  <Config Name="Journal" Target="/usr/share/graylog/data/journal" Default="/mnt/user/appdata/wazuh/graylog/journal" Mode="rw" Description="" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/wazuh/graylog/journal</Config>
+  <Config Name="GRAYLOG_SERVER_JAVA_OPTS" Target="GRAYLOG_SERVER_JAVA_OPTS" Default="" Mode="" Description="-Djavax.net.ssl.trustStore=/certs/cacerts -Xms1g -Xmx1g -server -XX:+UseG1GC -XX:-OmitStackTraceInFastThrow -Djdk.tls.acknowledgeCloseNotify=true -Dlog4j2.formatMsgNoLookups=true -Djavax.net.ssl.trustStorePassword=changeit" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+</Container>
