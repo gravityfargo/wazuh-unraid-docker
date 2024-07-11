@@ -5,8 +5,11 @@ services:
         image: gravityfargo/wazuh-unraid-setup:4.8.0
         container_name: wazuh-unraid-setup
         environment:
+            - INSTALL_CONFS=true
             - INSTALL_AGENT=false
+            - INSTALL_CERTS=true
             - INSTALL_SCRIPTS=true
+            - PREP_GRAYLOG=false
             - AGENT_DIRECTORY=/mnt/user/appdata/wazuh/wazuh-agent
             - MANAGER_NAME=wazuh-manager
             - MANAGER_IP=10.10.10.101
@@ -14,15 +17,17 @@ services:
             - INDEXER_IP=10.10.10.100
             - DASHBOARD_NAME=wazuh-dashboard
             - DASHBOARD_IP=10.10.10.102
-            - API_USERNAME=wazuh-wui
-            - API_PASSWORD=MyS3cr37P450r.*-
+            - OVERWRITE=true
+            - DEV_MODE=true
+            - VERBOSE=false
         volumes:
-            - /mnt/user/appdata/wazuh/wazuh-manager:/wazuh-manager
-            - /mnt/user/appdata/wazuh/wazuh-indexer:/wazuh-indexer
-            - /mnt/user/appdata/wazuh/wazuh-dashboard:/wazuh-dashboard
-            - /mnt/user/appdata/wazuh/wazuh-agent:/agent
-            # - /boot/config/plugins/user.scripts/scripts:/scripts
-            - /mnt/user/appdata/scripts:/scripts
+            - ./wazuh/wazuh-manager:/wazuh-manager
+            - ./wazuh/wazuh-indexer:/wazuh-indexer
+            - ./wazuh/wazuh-dashboard:/wazuh-dashboard
+            - ./wazuh/wazuh-agent:/agent
+            - ./wazuh/graylog:/graylog
+            - ./wazuh/scripts:/scripts
+            - ../build-docker-images/wazuh-unraid-setup/config/:/config
 
     wazuh-manager:
         image: gravityfargo/wazuh-manager:4.8.0

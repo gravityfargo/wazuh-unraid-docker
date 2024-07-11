@@ -147,8 +147,8 @@
 #
 hosts:
   - 1513629884013:
-      url:
+      url: "https://10.10.10.101"
       port: 55000
-      username:
-      password:
+      username: wazuh-wui
+      password: "7+qwQY+k4NZa1iHvsplqYc9HHAMa8zIE"
       run_as: false
